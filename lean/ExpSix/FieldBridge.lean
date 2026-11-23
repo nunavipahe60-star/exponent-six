@@ -1,10 +1,9 @@
 /-
   B1 (owner: R1). From "class-group exponent divides 6" to the norm witness and `FieldData`.
 
-  STATUS: no `sorry`s remain; all six from the first draft are filled. NOT YET COMPILED by R1, who has
-  no Lean toolchain. Every Mathlib name below was checked against the source at the pinned
-  revision 31ce06ea (the names in core Lean `Init` are marked "core"). Expect a few
-  tactic-level fixes on the first build.
+  STATUS: B1.1–B1.5 compiled at acd70a1, with v4.37.0-rc1 and Mathlib 31ce06ea. B1.6, the
+  Dedekind discharge, was added on top of that and is NOT YET COMPILED by R1, who has no Lean
+  toolchain.
 
   Revision note. Mathlib at this revision already has the ring of integers of a quadratic field:
   `QuadraticAlgebra ℤ a b` with ω² = a + bω is integrally closed iff `discr a b = b² + 4a`
@@ -13,11 +12,11 @@
   integral-basis workaround (former B1.4) unnecessary. The explicit split ideal
   𝔞 = (p, c + ω) and the coprimality argument are kept, and no primality of 𝔞 is used.
 
-  Hypotheses taken as instance arguments (to discharge once, when wiring up):
-    [IsDedekindDomain (QuadraticAlgebra ℤ a b)]
-      from `IsIntegralClosure.isDedekindDomain ℤ ℚ (QuadraticAlgebra ℚ a b) _`
-      together with `Int.isIntegralClosure_iff` and the `Field` instance on
-      `QuadraticAlgebra ℚ a b` (needs `Fact (¬ IsSquare (discr a b : ℚ))`, true for D < 0).
+  The Dedekind hypothesis. The core lemmas take `[IsDedekindDomain (QuadraticAlgebra ℤ a b)]`
+  as an instance argument. B1.6 discharges it for a fundamental `discr a b < 0`, via
+  `QuadraticAlgebra.Int.isIntegralClosure_iff` and `IsIntegralClosure.isDedekindDomain ℤ ℚ`.
+  The field structure on `QuadraticAlgebra ℚ a b` comes from `¬ IsSquare (discr a b : ℚ)`.
+  The end-to-end form is `fieldData_of_isFundamentalDiscr`.
 -/
 module
 
@@ -25,6 +24,10 @@ public import Mathlib.RingTheory.QuadraticAlgebra
 public import Mathlib.RingTheory.ClassGroup.Basic
 public import Mathlib.RingTheory.Ideal.Norm.AbsNorm
 public import Mathlib.Tactic.LinearCombination
+public import Mathlib.Algebra.QuadraticAlgebra.Int
+public import Mathlib.RingTheory.DedekindDomain.IntegralClosure
+public import Mathlib.Algebra.EuclideanDomain.Int
+public import Mathlib.Algebra.Order.Ring.Basic
 public import ExpSix.Reduction
 
 @[expose] public section
@@ -286,5 +289,55 @@ theorem fieldData_of_least [IsDedekindDomain (QuadraticAlgebra ℤ a b)]
            hleast := fun q hq hqp hq2 => by
              have : Fact q.Prime := ⟨hqp⟩
              exact fun h1 => hmin q hq hqp (splitsAt_of_legendre hq2 h1) }⟩
+
+/-! ### B1.6  Discharging the Dedekind hypothesis
+
+When `D = discr a b` is a fundamental discriminant, `QuadraticAlgebra ℤ a b` is the integral
+closure of `ℤ` in `QuadraticAlgebra ℚ a b` (`QuadraticAlgebra.Int.isIntegralClosure_iff`). For
+`D < 0`, the discriminant `D` is not a square in `ℚ`, so `QuadraticAlgebra ℚ a b` is a field: a
+separable quadratic extension of `ℚ`. An integral closure of `ℤ` in such a field is a Dedekind
+domain. Note that `D = 1` is fundamental but gives `ℤ × ℤ`, so the sign hypothesis is needed. -/
+
+theorem not_isSquare_discr_of_neg (hD : discr a b < 0) : ¬ IsSquare (discr a b) :=
+  fun h ↦ absurd hD (not_lt.mpr h.nonneg)
+
+theorem not_isSquare_discr_rat_of_neg (hD : discr a b < 0) :
+    ¬ IsSquare (discr (a : ℚ) (b : ℚ)) := by
+  intro h
+  have h0 := h.nonneg
+  rw [discr_intCast] at h0
+  have h1 : (0 : ℤ) ≤ discr a b := by exact_mod_cast h0
+  exact absurd hD (not_lt.mpr h1)
+
+theorem isDedekindDomain_of_isFundamentalDiscr (hfund : Int.IsFundamentalDiscr (discr a b))
+    (hD : discr a b < 0) : IsDedekindDomain (QuadraticAlgebra ℤ a b) := by
+  -- `Field (QuadraticAlgebra ℚ a b)`, through Mathlib's `Fact (¬ IsSquare (discr _ _))` bridge
+  have : Fact (¬ IsSquare (discr (a : ℚ) (b : ℚ))) := ⟨not_isSquare_discr_rat_of_neg hD⟩
+  -- `IsDomain (QuadraticAlgebra ℤ a b)`, needed for the `[IsDomain C]` argument
+  have : Fact (¬ IsSquare (discr a b)) := ⟨not_isSquare_discr_of_neg hD⟩
+  have : IsIntegralClosure (QuadraticAlgebra ℤ a b) ℤ (QuadraticAlgebra ℚ a b) :=
+    QuadraticAlgebra.Int.isIntegralClosure_iff.mpr hfund
+  exact IsIntegralClosure.isDedekindDomain ℤ ℚ (QuadraticAlgebra ℚ a b) (QuadraticAlgebra ℤ a b)
+
+instance [hfund : Fact (Int.IsFundamentalDiscr (discr a b))] [hD : Fact (discr a b < 0)] :
+    IsDedekindDomain (QuadraticAlgebra ℤ a b) :=
+  isDedekindDomain_of_isFundamentalDiscr hfund.out hD.out
+
+/-- B1, end to end and with no Dedekind hypothesis. `D = discr a b < 0` is fundamental, the
+class group of `QuadraticAlgebra ℤ a b` has exponent dividing 6, and `p` is the least prime
+that splits. Then `FieldData D p` holds. -/
+theorem fieldData_of_isFundamentalDiscr [Fact (Int.IsFundamentalDiscr (discr a b))]
+    [hD : Fact (discr a b < 0)]
+    (hexp : Monoid.exponent (ClassGroup (QuadraticAlgebra ℤ a b)) ∣ 6)
+    {p : ℕ} (hp : p.Prime) (hsplit : SplitsAt a b p)
+    (hmin : ∀ q < p, q.Prime → ¬ SplitsAt a b q) :
+    Nonempty (ExpSix.FieldData (discr a b) p) :=
+  fieldData_of_least hD.out hexp hp hsplit hmin
+
+/-- To apply B1 to a fundamental `D`, use the canonical representative
+`QuadraticAlgebra ℤ (D / 4) (D % 4)`. Its discriminant is `D`. -/
+theorem discr_canonical {D : ℤ} (hD : Int.IsFundamentalDiscr D) :
+    discr (D / 4) (D % 4) = D :=
+  QuadraticAlgebra.discr_ediv_emod hD.emod_four_eq_zero_or_one
 
 end ExpSix.FieldBridge
