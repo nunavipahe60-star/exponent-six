@@ -155,7 +155,25 @@ def show_margin(interval):
 
 
 if __name__ == "__main__":
-    Q = 25*10**24
+    # The large-discriminant lemma gives the initial cap without Bach--Sorenson.
+    Q = 10**60
+    for X, y_pre in ((28000, 5000), (6800, 1400)):
+        prefix = margin(X, y_pre, Q)
+        if prefix.lo <= 0:
+            raise ArithmeticError(f"Nonpositive bootstrap margin at X={X}")
+        prime_cap = primes_through(X)[-1]
+        next_Q = 4*prime_cap**6
+        if next_Q >= Q:
+            raise ArithmeticError("The bootstrap did not reduce the conductor bound")
+        print(f"Q={Q} X={X} y={y_pre} p_cap={prime_cap} "
+              f"margin={show_margin(prefix)} next_Q={next_Q}")
+        Q = next_Q
+
+    # Deliberately weaken the now-proved cap to replay the archived six rows.
+    archive_Q = 25*10**24
+    if Q > archive_Q:
+        raise ArithmeticError("The bootstrap does not reach the archived certificate")
+    Q = archive_Q
     y = 1020
     old_first = margin(4755, y, Q)
     assert old_first.hi < 0, "the original first row must fail with the corrected residues"
