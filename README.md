@@ -16,6 +16,7 @@ Assuming Dirichlet GRH, the computation excludes every negative fundamental disc
 | sieve_readme.md, sieve_selftest.log | CPU algorithm, reproduction commands and direct tests of high trace offsets |
 | pair_method.md, pair_production_log.txt | Independent exclusion by factoring differences from two norm equations |
 | regression_reference_log.json | Raw-trace counts, class numbers and norm-equation witnesses for the known fields |
+| lean/ | Compiled Lean 4 formalization (`ExpSix`: `Challenge.lean`, `Reduction.lean`, `PairReduction.lean`) pinned to `v4.37.0-rc1` |
 | SHA256SUMS.txt | SHA-256 of every other file in the archive |
 
 ## Short independent review path
