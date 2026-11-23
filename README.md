@@ -1,17 +1,18 @@
 # Imaginary quadratic fields of class-group exponent six
 
-Assuming Dirichlet GRH, the computation excludes every negative fundamental discriminant in the published gap whose class-group exponent divides six. Together with the Elsenhans–Klüners–Nicolae low-range theorem, it gives exactly **432 imaginary quadratic fields of exponent six**. This is a computer-assisted research note for independent review. The table describes the full ring of integers of each field.
+Assuming Dirichlet GRH, the computation excludes every negative fundamental discriminant in the published gap whose class-group exponent divides six. Together with the Elsenhans–Klüners–Nicolae low-range theorem, it gives exactly **432 imaginary quadratic fields of exponent six**, and closes Aiken–Ross–Shvydkoy–Xue Theorem 1.3(5) to give **1,236 imaginary quadratic orders of Picard exponent six** (432 maximal, 804 nonmaximal). This is a computer-assisted research note for independent review.
 
 ## Evidence
 
 | File | Contents |
 | --- | --- |
-| Classification_Proof.pdf and Classification_Proof.tex | Three-page argument from the two published endpoints to the exclusion |
+| Classification_Proof.pdf and Classification_Proof.tex | Four-page argument from the published endpoints to the field and order classifications |
 | known_exponent_six.csv | The 432 discriminants and their class groups, from Paderborn's EKN table |
 | positive_kernel_proof.md, positive_kernel_certificate.txt | Explicit-formula argument giving two split primes at most 3373, with all interval margins |
 | split_bound_proof.md, split_bound_certificate.txt | Alternative proof with a first-order logarithmic kernel and integer interval arithmetic |
 | coverage.csv, coverage_summary.txt | One row per prime, with the exact upper endpoint, CPU result and OpenCL result where applicable |
 | sieve_records/, alt_sieve_records/, sieve_small_records/ | Original per-prime result files |
+| isieve.c, independent_sieve_results.txt | Separately written C wheel sieve and its 205-prime production output |
 | sieve_readme.md, sieve_selftest.log | CPU algorithm, reproduction commands and direct tests of high trace offsets |
 | pair_method.md, pair_production_log.txt | Independent exclusion by factoring differences from two norm equations |
 | regression_reference_log.json | Raw-trace counts, class numbers and norm-equation witnesses for the known fields |
@@ -32,7 +33,7 @@ python pair_regression.py
 python regression_reference.py --prime-limit 193 --records sieve_small_records
 ~~~
 
-The coverage commands audit the saved output; the searches below regenerate it. The small regression independently checks all 16,738 raw traces, reconstructs fundamental discriminants, computes class-group exponents and checks all 432 class numbers against the table.
+`verify_coverage.py` and `sieve_verify.py` only check the saved log files and endpoints; they do not recompute the search. Full computational replication requires rerunning the C#, C or OpenCL programs below. The small regression independently checks all 16,738 raw traces, reconstructs fundamental discriminants, computes class-group exponents and checks all 432 class numbers against the table.
 
 ## Repeat the searches
 

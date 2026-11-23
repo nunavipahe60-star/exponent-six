@@ -9,13 +9,13 @@
 \newcommand{\file}[1]{\texttt{\detokenize{#1}}}
 \begin{document}
 \begin{center}
-{\Large\bfseries Imaginary quadratic fields of class-group exponent six}\\[5pt]
+{\Large\bfseries Class-group exponent six in imaginary quadratic fields and orders}\\[5pt]
 {\large A conditional classification with reproducible certificates}\\[5pt]
 Research note for independent review \(\cdot\) 23 November 2026
 \end{center}
 
 \section*{1. The classification}
-\textbf{Claim (assuming Dirichlet GRH).}
+\textbf{Theorem (assuming Dirichlet GRH).}
 Exactly 432 imaginary quadratic fields have ideal class group of exponent six.
 Their fundamental discriminants and class group structures are listed in
 \file{known_exponent_six.csv}. The largest absolute discriminant is \(5\,761\,140\).
@@ -29,6 +29,23 @@ hypothesis for quadratic fields. The relevant zeta functions factor as
 \(\zeta(s)L(s,\chi_D)\). Aiken, Ross, Shvydkoy and Xue identify the same
 interval \([L,Q_0]\) in Theorem~1.3(5). We use EKN's established low-range
 classification and exclude every \(D\) in this interval with \(E(D)\mid6\).
+
+\textbf{Corollary for all orders (assuming Dirichlet GRH).}
+Exactly \(1\,236\) negative order discriminants \(\Delta\) have
+\(\exp\operatorname{Pic}(\mathcal O_\Delta)=6\). Of these orders, 432 are
+maximal and 804 are nonmaximal. The largest \(|\Delta|\) is \(43\,522\,752\).
+
+\emph{Proof of the corollary.}
+Write \(\mathcal O_\Delta=\mathbb Z+f\mathcal O_K\) and \(\Delta=f^2D_K\),
+where \(D_K\) is the fundamental discriminant of \(K\). Here
+\(\operatorname{Pic}\) denotes proper invertible ideal classes modulo
+principal ideals. The remaining condition in Aiken--Ross--Shvydkoy--Xue
+(ARSX), Theorem~1.3(5), concerns \(|D_K|\): a missing fundamental
+discriminant in \([L,Q_0]\) would have to have field exponent exactly six.
+Our field exclusion rules this out. The conductor enumeration in ARSX,
+\S6, therefore makes their Table~A.6 complete. That table supplies the
+total and the extremal discriminant; subtracting the 432 maximal orders
+gives the nonmaximal count.
 
 \textbf{Norm equation.}
 If \(p\mathcal O_K=\mathfrak p\overline{\mathfrak p}\) splits and \(E(D)\mid6\),
@@ -45,16 +62,15 @@ since \(p\nmid D\). Then \(\alpha\in p\mathcal O_K\) (use the integral basis
 and \(p\) odd), contradicting the valuation at \(\bar{\mathfrak p}\).
 In particular \(d<4p^6\). Comparing with \(L\) gives \(p\ge2069\) for every split prime.
 
-\textbf{Finite exclusion.} The explicit formula on page 2 gives a split prime
+\textbf{Finite exclusion.} The positive-kernel bound in Section~2 gives a split prime
 below 3380. The least split prime therefore satisfies \(2069\le p\le3373\), and
 \[
  d\le4\cdot3373^6=5\,890\,579\,727\,931\,596\,470\,756 .
 \]
-For all 165 possible primes our two implementations exhausted the necessary
-trace conditions on page 3. Both found zero traces. This excludes the
-entire interval and proves the conditional claim, subject to the supplied
-finite computations. The arithmetic inputs, program sources and run records
-are included for independent review.
+For all 165 possible primes, the CPU and OpenCL searches in Section~4
+found zero traces satisfying the necessary conditions. This excludes the
+interval and proves the theorem under Dirichlet GRH. An independent C
+implementation also covered the wider range supplied by Section~3.
 
 \newpage
 \section*{2. An explicit upper bound for the least split prime}
@@ -105,20 +121,63 @@ endpoint by the exact integral of \(1-F\). Beyond \(\log X\) one adds
 \(4/[3X^{3/2}(1-X^{-2})]\). The code encloses the resulting finite
 expression by intervals with 48-digit decimal arithmetic.
 
-\textbf{Independent analytic certificate.} The logarithmic weight in
-Lemmas~2.2 and 2.3 of Lamzouri, Li and Soundararajan also suffices.
-Taking the residues in (2.8) gives
-\(-E_1(y)\ge\gamma/2-(\gamma/2+\log2)/y\). At \(y=1020\) the six cutoffs
-are \(4760,3895,3740,3708,3701,3700\).
+\newpage
+\section*{3. The initial discriminant bound and the logarithmic certificate}
+\textbf{Derivation of the EKN bound.}
+For \(d>e^{25}\), EKN, Theorem~3, gives a split prime
+\(p\le(1.881\log d+6.18)^2\) under GRH. If \(E(D)\mid6\), EKN,
+Lemma~1 (or the norm equation in Section~1), gives \(d\le4p^6\). Hence
+\[
+ R(d):=\frac{4(1.881\log d+6.18)^{12}}{d}\ \ge 1,\qquad
+ \frac{\mathrm d\log R}{\mathrm d\log d}=\frac{12(1.881)}{1.881\log d+6.18}-1<0
+ \quad (d\ge e^{25}).
+\]
+At \(Q_0=2.5\cdot10^{25}\), we have \(\log Q_0<58.5\) and
+\(1.881(58.5)+6.18<465/4\). The integer comparison
+\(465^{12}<4^{11}Q_0\) gives \(R(Q_0)<1\). Thus \(d<Q_0\), which
+recovers the exponent-six entry of EKN, Table~2.
+
+\textbf{Normalization and zero sum.}
+Put
+\[
+ \xi_D(s)=(d/\pi)^{s/2}\Gamma((s+1)/2)L(s,\chi_D),\qquad
+ B_D=-\frac{\xi_D'(0)}{\xi_D(0)} .
+\]
+The primitive quadratic character of negative discriminant is real and
+odd. Its Gauss sum is \(i\sqrt d\), so its root number is \(+1\) and
+\(\xi_D(s)=\xi_D(1-s)\). In the genus-one Hadamard product the logarithmic
+derivative at \(s=1\), compared with its value at \(s=0\) using this
+symmetry, gives \(B_D=\sum_\rho\Re(1/\rho)\). Here \(\rho\) runs over
+all nontrivial zeros of \(L(s,\chi_D)\) with multiplicity. Under GRH,
+\(\Re\rho=1/2\), so \(\Re(1/\rho)=1/(2|\rho|^2)\) and
+\(\sum_\rho|\rho|^{-2}=2B_D\). The latter sum converges absolutely.
+
+\textbf{Odd-character residues.}
+We derive the elementary term \(E_1(y)\) directly from the gamma integral
+in Lamzouri--Li--Soundararajan (LLS), equation~(2.8), as a check on the
+signs in the application of Lemma~2.3. Write \(\psi=\Gamma'/\Gamma\)
+and let \(\gamma\) be Euler's constant. For \(y>1\) the integrand
+\(\frac12\psi((s+1)/2)y^{s-1}/[s(s-1)]\) has residues
+\(-\gamma/2\) at \(1\), \((\gamma/2+\log2)/y\) at \(0\), and
+\(-y^{-2k-2}/[(2k+1)(2k+2)]\) at \(-2k-1\) for \(k\ge0\).
+Their sum is
+\[
+ E_1(y)=-\frac{\gamma}{2}(1-y^{-1})+\frac{\log2}{y}
+        -\sum_{k\ge0}\frac{y^{-2k-2}}{(2k+1)(2k+2)} .
+\]
+Consequently \(-E_1(y)\ge\gamma/2-(\gamma/2+\log2)/y\).
+At \(y=1020\), the logarithmic-weight certificate from LLS,
+Lemmas~2.2--2.3, has six successful cutoffs
+\(4760,3895,3740,3708,3701,3700\).
 Each successful row gives \(Q\gets4P^6\), with \(P\) the largest prime at
 most the cutoff. This gives \(p_1\le3697\). Combining ramification costs
 prime by prime and allowing a single exceptional split prime at \(X=3722\)
 also gives \(p_2\le3719\). The corrected integer-interval certificate and
 residue derivation are in \file{split_bound_proof.md} and its companion files.
-The CPU run covers all 205 primes through 3697.
+The two full-range CPU runs are recorded in Section~4.
 
 \newpage
-\section*{3. Exhaustion of the trace interval}
+\section*{4. Exhaustion of the trace interval}
 For each candidate least split prime \(p\) define \(A=2p^3\) and
 \(U_p=\lfloor\sqrt{A^2-L}\rfloor\). Any field in the gap supplies an integer
 \(1\le x\le U_p\), \(p\nmid x\), and for every odd prime \(\ell<p\),
@@ -135,9 +194,10 @@ needed in the gap.
 \begin{center}
 \begin{tabular}{lrrr}
 \toprule Computation&Prime buckets&Trace positions&Survivors\\ \midrule
-CPU, through 3373&165&\(6\,140\,632\,911\,929\)&0\\
+C\# CPU, through 3373&165&\(6\,140\,632\,911\,929\)&0\\
 OpenCL, through 3373&165&\(6\,140\,632\,911\,929\)&0\\
-CPU, through 3697&205&\(9\,649\,517\,432\,170\)&0\\ \bottomrule
+C\# CPU, through 3697&205&\(9\,649\,517\,432\,170\)&0\\
+Independent C, through 3697&205&\(9\,649\,517\,432\,170\)&0\\ \bottomrule
 \end{tabular}
 \end{center}
 Trace positions denote \(\sum_p U_p\) before congruence filtering.
@@ -145,9 +205,14 @@ The C\# sieve forms a CRT wheel for \(5,7,11,13,17,19\), intersects
 64-bit periodic masks through 73 and checks the remaining primes on survivors.
 The OpenCL program independently builds a different wheel through 13. It
 filters on the device through 131 and sends the resulting 92,197 candidates
-to a host-side exact residue test. The source, inclusive endpoints and
-per-prime counts are in the bundle. The CPU self-test also compares masks
-with Euler's criterion in intervals above \(7\cdot10^{10}\).
+to a host-side exact residue test. The repository includes both implementations and their records.
+A separately written C wheel sieve (\file{isieve.c}, sharing no code with
+\file{sieve.cs}) independently covered all 205 primes from 2069 through
+3697 (\file{independent_sieve_results.txt}), matched every inclusive
+endpoint in \file{coverage.csv}, and found zero surviving traces in every
+bucket. Thus the first 165 primes have three independent single-prime
+checks and the remaining 40 have two. The C\# self-test also compares
+masks with Euler's criterion in intervals above \(7\cdot10^{10}\).
 
 \textbf{Two-prime check.} The analytic certificates also bound a second
 split prime. For instance, at \(X=3387\) a single exceptional split prime
@@ -170,9 +235,9 @@ number 576. The small-range run checks implementation behavior; the norm
 equation and complete large-range run supply the exclusion.
 
 \textbf{Sources.} EKN, \href{https://arxiv.org/abs/1803.02056}{arXiv:1803.02056},
-Theorem~1, Lemma~1 and Table~2; \href{https://math.uni-paderborn.de/en/ag/ca/research/exponent/exponent0}{Paderborn class-group data}.
+Theorems~1 and 3, Lemma~1 and Tables~1--2; \href{https://math.uni-paderborn.de/en/ag/ca/research/exponent/exponent0}{Paderborn class-group data}.
 Aiken et al., \href{https://arxiv.org/abs/2605.26020}{arXiv:2605.26020},
-Theorem~1.3(5). Lamzouri et al., \href{https://arxiv.org/abs/1309.3595}{arXiv:1309.3595},
-Lemmas~2.2 and 2.3. Carneiro et al.,
+Theorem~1.3(5), \S6 and Table~A.6. Lamzouri et al., \href{https://arxiv.org/abs/1309.3595}{arXiv:1309.3595},
+Lemmas~2.2--2.3 and (2.8). Carneiro et al.,
 \href{https://arxiv.org/abs/2404.08380}{arXiv:2404.08380}, Lemma~9.
 \end{document}

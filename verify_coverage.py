@@ -65,6 +65,20 @@ def read_gpu(path, p, xmax):
     return pre, len(data['survivors'])
 
 
+def read_independent_c(path, expected_map):
+    lines = path.read_text(encoding='ascii').splitlines()
+    require(len(lines) == len(expected_map), f'{path}: expected {len(expected_map)} prime lines')
+    seen = set()
+    for line in lines:
+        m = re.fullmatch(r'p=(\d+) xmax=(\d+) survivors=(\d+) tested=(\d+) first=(\d+)', line)
+        require(m is not None, f'{path}: malformed line {line!r}')
+        p, xmax, surv, tested, first = map(int, m.groups())
+        require(p in expected_map and p not in seen, f'{path}: unexpected or duplicate prime {p}')
+        require(xmax == expected_map[p], f'{path}: endpoint mismatch at p={p}')
+        require(surv == 0 and first == 0 and 0 < tested <= xmax, f'{path}: invalid counts at p={p}')
+        seen.add(p)
+
+
 def make_reports(directory):
     cpu = expected_primes(CPU_LIMIT)
     dual = expected_primes(DUAL_LIMIT)
@@ -82,9 +96,11 @@ def make_reports(directory):
     writer.writerow(('p', 'x_min', 'x_max_inclusive', 'trace_count', 'cpu_survivors',
                      'opencl_presieve_count', 'opencl_survivors'))
     total_dual = total_cpu = pre_total = 0
+    xmax_map = {}
     for p in cpu:
         radicand = 4*p**6 - LOWER_DISC
         xmax = math.isqrt(radicand)
+        xmax_map[p] = xmax
         require(0 < xmax < 2*p**3 and xmax*xmax <= radicand < (xmax+1)**2,
                 f'p={p}: integer endpoint')
         require(xmax >= wheel_modulus and p > max(CPU_WHEEL), f'p={p}: short wheel range')
@@ -97,6 +113,9 @@ def make_reports(directory):
             pre_total += pre
         total_cpu += xmax
         writer.writerow((p, 1, xmax, xmax, cpu_count, pre, gpu_count))
+    indep_c = directory / 'independent_sieve_results.txt'
+    if indep_c.exists():
+        read_independent_c(indep_c, xmax_map)
     summary = (
         f'Lower absolute fundamental discriminant: {LOWER_DISC}\n'
         f'Dual sieve prime bound: {DUAL_LIMIT}\n'
