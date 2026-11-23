@@ -93,7 +93,7 @@ if [[ $RUN_LEAN -eq 1 ]]; then
   $PY - <<'EOF' > "$AX"
 import glob, re
 lines = ["import ExpSix"]
-for path in sorted(glob.glob("lean/ExpSix/*.lean")):
+for path in sorted(glob.glob("lean/ExpSix/**/*.lean", recursive=True)):
     ns = []
     for raw in open(path, encoding="utf-8"):
         line = raw.strip()

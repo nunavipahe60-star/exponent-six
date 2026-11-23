@@ -1,0 +1,163 @@
+{
+  "lean": "Lean (version 4.37.0-rc1, x86_64-w64-windows-gnu, commit 0b77e12952ad39077d80d8bd6b66d601f225c321, Release)",
+  "base_commit": "0b2059e",
+  "mathlib": "31ce06eaadf4a200c0e1407c5f10953cf606b8f8",
+  "method": "Sequential direct lean.exe processes using cached third-party imports, a fresh project olean directory, and -DwarningAsError=true. Forced timings include process start and import loading. The axiom audits import the newly produced oleans.",
+  "modules": {
+    "ExpSix.Reduction": {
+      "seconds": 3.039,
+      "exit_code": 0
+    },
+    "ExpSix.PairReduction": {
+      "seconds": 4.395,
+      "exit_code": 0
+    },
+    "ExpSix.ShapeGenerator": {
+      "seconds": 5.265,
+      "exit_code": 0
+    },
+    "ExpSix.ListDivisors": {
+      "seconds": 2.873,
+      "exit_code": 0
+    },
+    "ExpSix.Pratt": {
+      "seconds": 2.901,
+      "exit_code": 0
+    },
+    "ExpSix.LargePrimePilot": {
+      "seconds": 2.713,
+      "exit_code": 0
+    },
+    "ExpSix.PairCandidates": {
+      "seconds": 3.803,
+      "exit_code": 0
+    },
+    "ExpSix.PairWitnesses": {
+      "seconds": 3.38,
+      "exit_code": 0
+    },
+    "ExpSix.PairBridge": {
+      "seconds": 2.973,
+      "exit_code": 0
+    },
+    "ExpSix.P7": {
+      "seconds": 2.982,
+      "exit_code": 0
+    },
+    "ExpSix.Pilot.Pratt0000": {
+      "seconds": 4.914,
+      "exit_code": 0
+    },
+    "ExpSix.Pilot.PrimeTable": {
+      "seconds": 2.522,
+      "exit_code": 0
+    },
+    "ExpSix.Pilot.Rows0000": {
+      "seconds": 10.029,
+      "exit_code": 0
+    },
+    "ExpSix.Pilot.Manifest": {
+      "seconds": 4.626,
+      "exit_code": 0
+    }
+  },
+  "audits": {
+    "ExpSix.ShapeGenerator": {
+      "seconds": 2.666,
+      "exit_code": 0,
+      "declarations": {
+        "ExpSix.ShapeGenerator.primeTable_eq_reference": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ]
+      }
+    },
+    "ExpSix.PairCandidates": {
+      "seconds": 2.625,
+      "exit_code": 0,
+      "declarations": {
+        "ExpSix.PairSieve.rootPrime_iff": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "ExpSix.PairSieve.rootOK_sound": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ]
+      }
+    },
+    "ExpSix.PairBridge": {
+      "seconds": 2.682,
+      "exit_code": 0,
+      "declarations": {
+        "ExpSix.PairBridge.fieldData_pair_of_window": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ]
+      }
+    },
+    "ExpSix.LargePrimePilot": {
+      "seconds": 2.403,
+      "exit_code": 0,
+      "declarations": {
+        "ExpSix.LargePrimePilot.broad_factor_prime": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ]
+      }
+    },
+    "ExpSix.Pilot.Rows0000": {
+      "seconds": 2.686,
+      "exit_code": 0,
+      "declarations": {
+        "ExpSix.Pilot.rows2069_2081_ok": [
+          "Classical.choice",
+          "propext"
+        ],
+        "ExpSix.Pilot.rows2069_2083_ok": [
+          "Classical.choice",
+          "propext"
+        ],
+        "ExpSix.Pilot.rows2069_2087_ok": [
+          "Classical.choice",
+          "propext"
+        ]
+      }
+    },
+    "ExpSix.Pilot.Manifest": {
+      "seconds": 2.931,
+      "exit_code": 0,
+      "declarations": {
+        "ExpSix.Pilot.pilot2069_2081Excluded": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "ExpSix.Pilot.pilot2069_2083Excluded": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "ExpSix.Pilot.pilot2069_2087Excluded": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "ExpSix.Pilot.pilotRejectMissingRoots": [
+          "Classical.choice",
+          "propext"
+        ],
+        "ExpSix.Pilot.pilotRejectCompositePratt": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ]
+      }
+    }
+  }
+}

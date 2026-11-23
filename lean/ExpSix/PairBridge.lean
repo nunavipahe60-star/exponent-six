@@ -2,14 +2,24 @@ module
 
 public import ExpSix.Reduction
 public import ExpSix.PairReduction
+public import ExpSix.ShapeGenerator
 
 @[expose] public section
 
+/-!
+# Interface between the supplied reduction prototype and the pair certificate
+
+The first prime carries the least-splitting-prime data from `Reduction`.
+The second prime only supplies a primitive norm witness.  All field,
+splitting-prime and gap hypotheses remain explicit inputs to this bridge.
+-/
+
 namespace ExpSix.PairBridge
 
-open ExpSix.PairReduction
+open ExpSix.PairReduction ExpSix.ShapeGenerator
 
-/-- Information needed at the second split prime. -/
+/-- Information needed at the second prime.  Primitivity excludes a trace
+divisible by that prime.  Minimality is a property of the first prime. -/
 structure NormWitness (D : ℤ) (r : ℕ) where
   x : ℕ
   y : ℕ
@@ -17,14 +27,15 @@ structure NormWitness (D : ℤ) (r : ℕ) where
   hpx : ¬ r ∣ x
   hnorm : 4 * r ^ 6 = x ^ 2 + D.natAbs * y ^ 2
 
-/-- Bound used to enumerate each second coordinate of a shape. -/
+/-- The weak coordinate estimate also applies to zero traces. -/
 theorem coordinate_in_shape {d p x y : ℕ}
     (hL : Lgap ≤ d) (hn : 4 * p ^ 6 = x ^ 2 + d * y ^ 2) :
     Lgap * y ^ 2 ≤ 4 * p ^ 6 := by
   have h := Nat.mul_le_mul_right (y ^ 2) hL
   omega
 
-/-- On the positive-kernel prime range every norm witness has second coordinate at most `4`. -/
+/-- On the production prime range every norm witness has second coordinate
+at most four, since `4 * 3373^6 < 25 * Lgap`. -/
 theorem coordinate_le_four {d p x y : ℕ}
     (hp : p ≤ 3373) (hL : Lgap ≤ d)
     (hn : 4 * p ^ 6 = x ^ 2 + d * y ^ 2) : y ≤ 4 := by
@@ -37,8 +48,28 @@ theorem coordinate_le_four {d p x y : ℕ}
   have := second_coordinate_lt (b := 5) hn hb
   omega
 
-/-- A genuine double norm witness yields an enumerated shape, an admissible trace at the
-smaller prime, and a positively ordered divisor pair satisfying the signed reconstruction. -/
+/-- A pair of norm witnesses in either closed prime window gives a valid shape
+and a positively ordered divisor pair with the signed reconstruction equations. -/
+theorem fieldData_pair_of_window {w : Window} {D : ℤ} {p r : ℕ}
+    (hD : D < 0) (hL : Lgap ≤ D.natAbs) (hp : p.Prime) (hr : r.Prime)
+    (hlo : 2069 ≤ p) (hpmax : p ≤ w.pMax) (hpr : p < r) (hrmax : r ≤ w.rMax)
+    (F : FieldData D p) (G : NormWitness D r) :
+    Admissible p F.x ∧ Valid w ⟨p, r, F.y, G.y⟩ ∧
+    ∃ a b : ℕ, 0 < a ∧ a < b ∧ a * b = pairK p r F.y G.y ∧
+      (b : ℤ) + signedSmall (cubeDelta p r F.y G.y) (a : ℤ) = 2 * ((G.y : ℤ) * F.x) ∧
+      (b : ℤ) - signedSmall (cubeDelta p r F.y G.y) (a : ℤ) = 2 * ((F.y : ℤ) * G.x) := by
+  obtain ⟨hx, _, ha⟩ := admissible_of_fieldData hD F hL
+  have hu : 0 < G.x := by
+    rcases Nat.eq_zero_or_pos G.x with hz | hpos
+    · exact absurd (hz ▸ dvd_zero r) G.hpx
+    · exact hpos
+  have hs : Valid w ⟨p, r, F.y, G.y⟩ :=
+    ⟨hp, hr, hlo, hpmax, hpr, hrmax, F.hy, G.hy,
+      strict_coordinate_of_norm hL hx F.hnorm, strict_coordinate_of_norm hL hu G.hnorm⟩
+  exact ⟨ha, hs, norm_witnesses_pair hp hr hpr hx F.hy hu G.hy hs.y_lt_p F.hnorm G.hnorm⟩
+
+/-- Original weak-bound interface for the tight window, including `r = 3373`.
+The strict bounds in either window are fields of the valid shape above. -/
 theorem fieldData_pair {D : ℤ} {p r : ℕ} (hD : D < 0) (hL : Lgap ≤ D.natAbs)
     (hp : p.Prime) (hr : r.Prime) (hlo : 2069 ≤ p) (hpr : p < r)
     (hhi : r ≤ 3373) (F : FieldData D p) (G : NormWitness D r) :
@@ -47,15 +78,8 @@ theorem fieldData_pair {D : ℤ} {p r : ℕ} (hD : D < 0) (hL : Lgap ≤ D.natAb
     ∃ a b : ℕ, 0 < a ∧ a < b ∧ a * b = pairK p r F.y G.y ∧
       (b : ℤ) + signedSmall (cubeDelta p r F.y G.y) (a : ℤ) = 2 * ((G.y : ℤ) * F.x) ∧
       (b : ℤ) - signedSmall (cubeDelta p r F.y G.y) (a : ℤ) = 2 * ((F.y : ℤ) * G.x) := by
-  obtain ⟨hx, _, ha⟩ := admissible_of_fieldData hD F hL
-  have hy₄ := coordinate_le_four (le_trans (le_of_lt hpr) hhi) hL F.hnorm
-  have hy : 0 < F.y := F.hy
-  have hv : 0 < G.y := G.hy
-  have hu : 0 < G.x := by
-    rcases Nat.eq_zero_or_pos G.x with hz | hpos
-    · exact absurd (hz ▸ dvd_zero r) G.hpx
-    · exact hpos
-  exact ⟨ha, coordinate_in_shape hL F.hnorm, coordinate_in_shape hL G.hnorm,
-    norm_witnesses_pair hp hr hpr hx hy hu hv (by omega) F.hnorm G.hnorm⟩
+  obtain ⟨ha, hs, hpair⟩ := fieldData_pair_of_window (w := .tight) hD hL hp hr hlo
+    (le_trans (le_of_lt hpr) hhi) hpr hhi F G
+  exact ⟨ha, hs.yBound.le, hs.vBound.le, hpair⟩
 
 end ExpSix.PairBridge

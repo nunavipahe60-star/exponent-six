@@ -1,0 +1,7 @@
+p,r,y,v,sign_vp3_minus_yr3,positive_divisors,interval_divisor_pairs,integral_bounded_primitive,common_integer_d_at_least_L,nonzero_square_witnesses,max_least_witness_prime
+2069,2081,1,1,-1,3456,370,245,58,58,59
+3371,3373,4,1,-1,288,4,1,0,0,0
+3371,3373,1,4,1,48,1,0,0,0,0
+3697,3719,5,5,-1,5376,407,94,13,13,29
+3697,3719,1,5,1,288,1,0,0,0,0
+3697,3719,5,1,-1,192,2,0,0,0,0
