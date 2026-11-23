@@ -1,0 +1,178 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[margin=0.86in]{geometry}
+\usepackage{amsmath,amssymb,booktabs,array}
+\usepackage[hidelinks]{hyperref}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\setlength{\emergencystretch}{2em}
+\newcommand{\Cl}{\operatorname{Cl}}
+\newcommand{\file}[1]{\texttt{\detokenize{#1}}}
+\begin{document}
+\begin{center}
+{\Large\bfseries Imaginary quadratic fields of class-group exponent six}\\[5pt]
+{\large A conditional classification with reproducible certificates}\\[5pt]
+Research note for independent review \(\cdot\) 23 November 2026
+\end{center}
+
+\section*{1. The classification}
+\textbf{Claim (assuming Dirichlet GRH).}
+Exactly 432 imaginary quadratic fields have ideal class group of exponent six.
+Their fundamental discriminants and class group structures are listed in
+\file{known_exponent_six.csv}. The largest absolute discriminant is \(5\,761\,140\).
+
+Let \(D<0\) be a fundamental discriminant, \(d=|D|\), and
+\(E(D)=\exp\Cl(\mathcal O_{\mathbb Q(\sqrt D)})\).
+Elsenhans, Kl\"uners and Nicolae (EKN) counted the 432 fields through
+\(L=3.1\cdot10^{20}\). Their Theorem~3 and Table~2 give
+\(Q_0=2.5\cdot10^{25}\) as an upper bound under the extended Riemann
+hypothesis for quadratic fields. The relevant zeta functions factor as
+\(\zeta(s)L(s,\chi_D)\). Aiken, Ross, Shvydkoy and Xue identify the same
+interval \([L,Q_0]\) in Theorem~1.3(5). We use EKN's established low-range
+classification and exclude every \(D\) in this interval with \(E(D)\mid6\).
+
+\textbf{Norm equation.}
+If \(p\mathcal O_K=\mathfrak p\overline{\mathfrak p}\) splits and \(E(D)\mid6\),
+write \(\mathfrak p^6=(\alpha)\) with
+\(\alpha=(x+y\sqrt D)/2\). A rational generator has equal valuations at the
+two primes above \(p\), so \(y\ne0\). A generator of trace zero satisfies
+\(\bar\alpha=-\alpha\), which would make its ideal equal to its conjugate.
+After changing signs and conjugating if necessary,
+\[
+                 4p^6=x^2+dy^2,\qquad x,y\ge1 .
+\]
+For odd \(p\), reduction modulo \(p\) shows that \(p\mid x\) implies \(p\mid y\),
+since \(p\nmid D\). Then \(\alpha\in p\mathcal O_K\) (use the integral basis
+and \(p\) odd), contradicting the valuation at \(\bar{\mathfrak p}\).
+In particular \(d<4p^6\). Comparing with \(L\) gives \(p\ge2069\) for every split prime.
+
+\textbf{Finite exclusion.} The explicit formula on page 2 gives a split prime
+below 3380. The least split prime therefore satisfies \(2069\le p\le3373\), and
+\[
+ d\le4\cdot3373^6=5\,890\,579\,727\,931\,596\,470\,756 .
+\]
+For all 165 possible primes our two implementations exhausted the necessary
+trace conditions on page 3. Both found zero traces. This excludes the
+entire interval and proves the conditional claim, subject to the supplied
+finite computations. The arithmetic inputs, program sources and run records
+are included for independent review.
+
+\newpage
+\section*{2. An explicit upper bound for the least split prime}
+For \(q=d\) and \(X>2\), take \(g\) constant on each of 64 equal subintervals
+of \([0,\log X)\), with the signed integer values in
+\file{positive_kernel_verify.py}, and zero elsewhere. Its normalized
+autocorrelation \(F(u)=\int g(t)g(t+u)\,dt/\int g^2\) is even, piecewise linear,
+has \(F(0)=1\), and vanishes for \(|u|\ge\log X\). The Fourier transform
+\(h(t)=\int F(u)e^{itu}\,du\) is nonnegative on the real axis. In every
+fixed horizontal strip it decays as \(O_X((1+|\Re t|)^{-2})\).
+
+For the odd primitive quadratic character \(\chi_D\), the Guinand--Weil
+explicit formula (Carneiro et al., Lemma~9) now gives, under GRH,
+\begin{align*}
+2\sum_{n<X}\frac{\Lambda(n)\chi_D(n)}{\sqrt n}F(\log n)
+ &\le \log(q/\pi)+\psi(3/4)+J_F,\\
+J_F&=\int_0^\infty\frac{2e^{-3u/2}}{1-e^{-2u}}(1-F(u))\,du .
+\end{align*}
+Indeed the zero sum consists of nonnegative \(h(\gamma)\). Fourier inversion
+in the integral representation of the digamma function gives \(J_F\).
+
+If \(p<X\) is inert its contribution is
+\(A_p=2\log p\,\sum_{p^k<X}(-1)^k F(k\log p)/p^{k/2}\); a ramified prime
+contributes zero. If none splits, for every \(\lambda\ge0\) the left side is at least
+\(\sum_{p<X}\min(A_p,\lambda\log p)-\lambda\log q\), since
+\(\sum_{p\mid D}\log p\le\log q\). Using
+\(\log\pi-\psi(3/4)>2.22\), the following positive margin forces a split prime:
+\[
+   \sum_{p<X}\min(A_p,\lambda\log p)-(1+\lambda)\log Q+2.22-J_{\rm up}>0,
+   \qquad q\le Q,\quad J_{\rm up}\ge J_F .
+\]
+Every successful row permits \(Q\gets4X^6\) by the norm equation.
+Starting at \(Q_0\), the outward-rounded lower bounds are
+\begin{center}
+\begin{tabular}{rrr@{\qquad\qquad}rrr}
+\toprule \(X\)&\(\lambda\)&Margin&\(X\)&\(\lambda\)&Margin\\\midrule
+4650&.0405&1.402389&3400&.0442&.181594\\
+3750&.0428&1.155681&3390&.0443&.133120\\
+3500&.0439&.444949&3385&.0443&.108959\\
+3420&.0442&.207442&3380&.0443&.075457\\\bottomrule
+\end{tabular}
+\end{center}
+Read down the left half, then the right. On the first cell of width
+\(\Delta=(\log X)/64\), the weight of \(1-F\) is at most \(1/u\), giving
+\(1-F(\Delta)\) as an upper bound for that integral. Each remaining cell
+uses sixteen subintervals, multiplying the decreasing weight at the left
+endpoint by the exact integral of \(1-F\). Beyond \(\log X\) one adds
+\(4/[3X^{3/2}(1-X^{-2})]\). The code encloses the resulting finite
+expression by intervals with 48-digit decimal arithmetic.
+
+\textbf{Independent analytic certificate.} The logarithmic weight in
+Lemmas~2.2 and 2.3 of Lamzouri, Li and Soundararajan also suffices.
+Taking the residues in (2.8) gives
+\(-E_1(y)\ge\gamma/2-(\gamma/2+\log2)/y\). At \(y=1020\) the six cutoffs
+are \(4760,3895,3740,3708,3701,3700\).
+Each successful row gives \(Q\gets4P^6\), with \(P\) the largest prime at
+most the cutoff. This gives \(p_1\le3697\). Combining ramification costs
+prime by prime and allowing a single exceptional split prime at \(X=3722\)
+also gives \(p_2\le3719\). The corrected integer-interval certificate and
+residue derivation are in \file{split_bound_proof.md} and its companion files.
+The CPU run covers all 205 primes through 3697.
+
+\newpage
+\section*{3. Exhaustion of the trace interval}
+For each candidate least split prime \(p\) define \(A=2p^3\) and
+\(U_p=\lfloor\sqrt{A^2-L}\rfloor\). Any field in the gap supplies an integer
+\(1\le x\le U_p\), \(p\nmid x\), and for every odd prime \(\ell<p\),
+\[
+ \left(\frac{x^2-A^2}{\ell}\right)
+ =\left(\frac{D y^2}{\ell}\right)\in\{0,-1\}.
+\]
+If \(\ell\mid yD\), the symbol is zero and the residue is retained.
+The condition at 2 and the fundamental-discriminant conditions can both be
+omitted: this enlarges the set being exhausted. No integer survives even
+these relaxed tests, so no factorization or class-group computation is
+needed in the gap.
+
+\begin{center}
+\begin{tabular}{lrrr}
+\toprule Computation&Prime buckets&Trace positions&Survivors\\ \midrule
+CPU, through 3373&165&\(6\,140\,632\,911\,929\)&0\\
+OpenCL, through 3373&165&\(6\,140\,632\,911\,929\)&0\\
+CPU, through 3697&205&\(9\,649\,517\,432\,170\)&0\\ \bottomrule
+\end{tabular}
+\end{center}
+Trace positions denote \(\sum_p U_p\) before congruence filtering.
+The C\# sieve forms a CRT wheel for \(5,7,11,13,17,19\), intersects
+64-bit periodic masks through 73 and checks the remaining primes on survivors.
+The OpenCL program independently builds a different wheel through 13. It
+filters on the device through 131 and sends the resulting 92,197 candidates
+to a host-side exact residue test. The source, inclusive endpoints and
+per-prime counts are in the bundle. The CPU self-test also compares masks
+with Euler's criterion in intervals above \(7\cdot10^{10}\).
+
+\textbf{Two-prime check.} The analytic certificates also bound a second
+split prime. For instance, at \(X=3387\) a single exceptional split prime
+costs at most \(0.148234\) in the explicit formula; the remaining margin is
+greater than \(0.009267\). For two primes \(p<r\) with witnesses \((x,y),(u,v)\),
+eliminating \(d\) gives
+\[
+(vx-yu)(vx+yu)=4(vp^3-yr^3)(vp^3+yr^3).
+\]
+Exhausting divisors for \(p\le3698,\ r\le3720\) gives \(6\,422\,835\)
+primitive trace pairs before the odd-prime tests and zero after them.
+\file{pair_method.md} derives the divisor range and covers the zero difference.
+
+\textbf{Regression in the known range.} At \(L=1\) and \(p\le193\), two
+implementations agreed on all 16,738 surviving traces across all 44 prime
+buckets. Reconstruction of the fundamental discriminant and exact ideal-class
+arithmetic recovered all 432 published fields with their class numbers.
+For \(D=-5\,761\,140\) a witness is \(p=41,\ x=136498,\ y=8\), with class
+number 576. The small-range run checks implementation behavior; the norm
+equation and complete large-range run supply the exclusion.
+
+\textbf{Sources.} EKN, \href{https://arxiv.org/abs/1803.02056}{arXiv:1803.02056},
+Theorem~1, Lemma~1 and Table~2; \href{https://math.uni-paderborn.de/en/ag/ca/research/exponent/exponent0}{Paderborn class-group data}.
+Aiken et al., \href{https://arxiv.org/abs/2605.26020}{arXiv:2605.26020},
+Theorem~1.3(5). Lamzouri et al., \href{https://arxiv.org/abs/1309.3595}{arXiv:1309.3595},
+Lemmas~2.2 and 2.3. Carneiro et al.,
+\href{https://arxiv.org/abs/2404.08380}{arXiv:2404.08380}, Lemma~9.
+\end{document}

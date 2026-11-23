@@ -1,0 +1,3 @@
+bounds=2069,3698,3720,310000000000000000000
+prime_pairs=21525 shape_pairs=135310 divisor_candidates=16870532
+primitive_trace_pairs=6422835 after_odd_prime_sieve=0 zero_differences=0 emitted=0

@@ -1,0 +1,10 @@
+version=1 p=89 Dmin=1
+xmax=1409937 survivors=7 active_wheel_classes=107449
+150199
+195899
+221498
+442543
+635597
+956888
+1264617
+END

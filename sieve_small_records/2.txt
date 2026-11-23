@@ -1,0 +1,11 @@
+version=1 p=2 Dmin=1
+xmax=15 survivors=8 active_wheel_classes=0
+1
+3
+5
+7
+9
+11
+13
+15
+END

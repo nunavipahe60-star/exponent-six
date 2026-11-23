@@ -1,0 +1,3 @@
+version=1 p=3041 Dmin=310000000000000000000
+xmax=53417525809 survivors=0 active_wheel_classes=123200
+END

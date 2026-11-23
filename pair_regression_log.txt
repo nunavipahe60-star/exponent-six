@@ -1,0 +1,3 @@
+bounds=2,5,7,100
+prime_pairs=6 shape_pairs=2189 divisor_candidates=15287
+primitive_trace_pairs=186 after_odd_prime_sieve=186 zero_differences=0 emitted=59

@@ -1,0 +1,10 @@
+Lower absolute fundamental discriminant: 310000000000000000000
+Dual sieve prime bound: 3380
+Dual sieve prime range: 2069 through 3373 (165 primes)
+Dual sieve positive integer traces before filtering: 6140632911929
+OpenCL presieve candidates before final congruence checks: 92197
+Dual sieve final traces: 0
+Extended CPU prime bound: 3698
+Extended CPU prime range: 2069 through 3697 (205 primes, including dual range)
+Extended CPU positive integer traces before filtering: 9649517432170
+Extended CPU final traces: 0

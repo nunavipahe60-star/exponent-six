@@ -1,0 +1,31 @@
+PASS p=2 qmax=17 xmax=15 survivors=8
+PASS p=2 qmax=73 xmax=15 survivors=8
+PASS p=2 qmax=101 xmax=15 survivors=8
+PASS p=3 qmax=17 xmax=53 survivors=36
+PASS p=3 qmax=73 xmax=53 survivors=36
+PASS p=3 qmax=101 xmax=53 survivors=36
+PASS p=13 qmax=17 xmax=4393 survivors=1476
+PASS p=13 qmax=73 xmax=4393 survivors=1476
+PASS p=13 qmax=101 xmax=4393 survivors=1476
+PASS p=19 qmax=17 xmax=13717 survivors=1715
+PASS p=19 qmax=73 xmax=13717 survivors=1715
+PASS p=19 qmax=101 xmax=13717 survivors=1715
+PASS p=41 qmax=17 xmax=137841 survivors=17709
+PASS p=41 qmax=73 xmax=137841 survivors=952
+PASS p=41 qmax=101 xmax=137841 survivors=952
+PASS p=73 qmax=17 xmax=778033 survivors=101008
+PASS p=73 qmax=73 xmax=778033 survivors=26
+PASS p=73 qmax=101 xmax=778033 survivors=26
+PASS p=79 qmax=17 xmax=986077 survivors=128149
+PASS p=79 qmax=73 xmax=986077 survivors=19
+PASS p=79 qmax=101 xmax=986077 survivors=19
+PASS p=137 qmax=17 xmax=1234567 survivors=161321
+PASS p=137 qmax=73 xmax=1234567 survivors=31
+PASS p=137 qmax=101 xmax=1234567 survivors=0
+PASS p=2069 qmax=17 xmax=1234567 survivors=162429
+PASS p=2069 qmax=73 xmax=1234567 survivors=30
+PASS p=2069 qmax=101 xmax=1234567 survivors=0
+PASS high interval p=3373 qmax=73 xmin=19000000123 xmax=19001000123 survivors=17
+PASS high interval p=3373 qmax=73 xmin=66300043217 xmax=66301043217 survivors=14
+PASS high interval p=3373 qmax=73 xmin=73400000548 xmax=73401000548 survivors=23
+PASS cyclic group masks: 1478016 positions across two block transitions

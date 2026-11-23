@@ -1,0 +1,42 @@
+{
+  "small": {
+    "first_prime": 2,
+    "last_prime": 193,
+    "primes": 44,
+    "min_abs_discriminant": 1,
+    "inclusive_trace_positions": 141889198,
+    "raw_survivors": 16738,
+    "active_wheel_classes": 2733735,
+    "sha256_canonical_records": "63e55948a05eee371b88d48703ca46cf2c997fa55c859161cca366c867d8b985"
+  },
+  "primary": {
+    "first_prime": 2069,
+    "last_prime": 3373,
+    "primes": 165,
+    "min_abs_discriminant": 310000000000000000000,
+    "inclusive_trace_positions": 6140632911929,
+    "raw_survivors": 0,
+    "active_wheel_classes": 20328000,
+    "sha256_canonical_records": "acc6f3d0f5fa9cfba5596662e37d92b7afe697fbaa36868a94f3ea44f28cc121"
+  },
+  "extension": {
+    "first_prime": 3389,
+    "last_prime": 3697,
+    "primes": 40,
+    "min_abs_discriminant": 310000000000000000000,
+    "inclusive_trace_positions": 3508884520241,
+    "raw_survivors": 0,
+    "active_wheel_classes": 4928000,
+    "sha256_canonical_records": "e59cca9a7308d86e34cf3e5ae3c62f1d03da5ca5b5a6a8ca9c40efa6b1e3a76f"
+  },
+  "combined": {
+    "first_prime": 2069,
+    "last_prime": 3697,
+    "primes": 205,
+    "min_abs_discriminant": 310000000000000000000,
+    "inclusive_trace_positions": 9649517432170,
+    "raw_survivors": 0,
+    "active_wheel_classes": 25256000,
+    "sha256_canonical_records": "921c1d3415af1d2299182d986714448f81725589f124daf874272166e53c89c9"
+  }
+}
