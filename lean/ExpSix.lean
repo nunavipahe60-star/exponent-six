@@ -7,3 +7,4 @@ public import ExpSix.FactorCertificate
 public import ExpSix.PairCertificate
 public import ExpSix.PairBridge
 public import ExpSix.PairExample
+public import ExpSix.FieldBridge
