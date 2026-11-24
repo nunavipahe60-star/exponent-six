@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Mechanical verification for the exponent-six repository.
-# Run from the repository root:   ./verify.sh            (everything)
-#                                 ./verify.sh --no-lean  (skip lake build and axioms)
+# Run from the repository root:   ./verify.sh                (fast default checks + public Lean graph)
+#                                 ./verify.sh --full-kernel  (also build/audit 1,126-module TightGap + Manifest)
+#                                 ./verify.sh --no-lean      (skip lake build and axioms)
 # Exit status is nonzero on the first failure. Nothing here judges mathematics;
 # it only checks that the recorded artefacts are intact and reproducible.
 set -euo pipefail
@@ -10,7 +11,9 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$ROOT"
 export PATH="$HOME/.elan/bin:$PATH"
 RUN_LEAN=1
+FULL_KERNEL=0
 [[ "${1:-}" == "--no-lean" ]] && RUN_LEAN=0
+[[ "${1:-}" == "--full-kernel" ]] && FULL_KERNEL=1
 
 if command -v python3 >/dev/null 2>&1 && python3 -I -c "import sys" >/dev/null 2>&1; then
   PY="python3 -I"
@@ -99,6 +102,18 @@ if [[ $RUN_LEAN -eq 1 ]]; then
     fi
     tail -n 1 "$log"
   ) || fail "public axiom audit"
+
+  if [[ $FULL_KERNEL -eq 1 ]]; then
+    step "7. Full 1,126-module TightGap + Manifest kernel & axiom verification"
+    ${PY% -I} lean/tools/build_kernel_chunks.py \
+      --project lean \
+      --target ExpSix.TightGap \
+      --theorem ExpSix.TightGap.no_exponent_dvd_six_in_gap \
+      --theorem ExpSix.Generated.tightCovered \
+      --theorem ExpSix.Generated.tightFieldDataExcluded \
+      --packages lean/.lake/packages \
+      --jobs 3 || fail "full kernel manifest/TightGap verification"
+  fi
 fi
 
 printf '\nALL CHECKS PASSED\n'
