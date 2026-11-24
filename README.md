@@ -1,5 +1,7 @@
 # Imaginary quadratic fields of class-group exponent six
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24489676.svg)](https://doi.org/10.5281/zenodo.24489676)
+
 Assuming Dirichlet GRH, the computation excludes every negative fundamental discriminant in the published gap whose class-group exponent divides six. Together with the Elsenhans–Klüners–Nicolae low-range theorem, it gives exactly **432 imaginary quadratic fields of exponent six**, and closes Aiken–Ross–Shvydkoy–Xue Theorem 1.3(5) to give **1,236 imaginary quadratic orders of Picard exponent six** (432 maximal, 804 nonmaximal). This is a computer-assisted research note for independent review.
 
 ## Evidence
