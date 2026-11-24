@@ -1,9 +1,8 @@
 /-
   B1 (owner: R1). From "class-group exponent divides 6" to the norm witness and `FieldData`.
 
-  STATUS: B1.1–B1.5 compiled at acd70a1, with v4.37.0-rc1 and Mathlib 31ce06ea. B1.6, the
-  Dedekind discharge, was added on top of that and is NOT YET COMPILED by R1, who has no Lean
-  toolchain.
+  STATUS: compiled with v4.37.0-rc1 and Mathlib 31ce06ea, warnings as errors, standard axioms
+  only (B1 at acd70a1; the B1.6 Dedekind discharge at dd6e1e5).
 
   Revision note. Mathlib at this revision already has the ring of integers of a quadratic field:
   `QuadraticAlgebra ℤ a b` with ω² = a + bω is integrally closed iff `discr a b = b² + 4a`

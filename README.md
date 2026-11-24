@@ -16,8 +16,21 @@ Assuming Dirichlet GRH, the computation excludes every negative fundamental disc
 | sieve_readme.md, sieve_selftest.log | CPU algorithm, reproduction commands and direct tests of high trace offsets |
 | pair_method.md, pair_production_log.txt | Independent exclusion by factoring differences from two norm equations |
 | regression_reference_log.json | Raw-trace counts, class numbers and norm-equation witnesses for the known fields |
-| lean/ | Compiled Lean 4 formalization (`ExpSix`: `Challenge.lean`, `Reduction.lean`, `PairReduction.lean`) pinned to `v4.37.0-rc1` |
+| lean/ | Lean 4 formalization pinned to `v4.37.0-rc1` and Mathlib `31ce06ea`, including the kernel-checked finite exclusion (`ExpSix.TightGap.no_exponent_dvd_six_in_gap`); see below |
+| CLAIMS.md, verify.sh | Claims ledger with owners, reviewers and dependencies, and the script that reruns every mechanical check |
 | SHA256SUMS.txt | SHA-256 of every other file in the archive |
+
+## What is machine-checked
+
+The Lean theorem `ExpSix.TightGap.no_exponent_dvd_six_in_gap` is proved with standard axioms only (`propext`, `Classical.choice`, `Quot.sound`), with no `sorry` and no `native_decide`. It says the following. Let `D = discr a b < 0` be a fundamental discriminant with `|D| ≥ 3.1·10²⁰`. Suppose the class group of `QuadraticAlgebra ℤ a b`, the ring of integers of the field, has exponent dividing 6. Then there are no two split primes `p < r ≤ 3373`.
+
+Three inputs stay outside Lean:
+
+- the positive-kernel certificate (A3), which uses GRH to give two split primes up to 3373 and is checked by exact interval arithmetic in `positive_kernel_verify.py`;
+- the EKN classification below the gap (E1);
+- ARSX Theorem 1.3(5) for orders (E3).
+
+`CLAIMS.md` lists every claim with its evidence and its status. `./verify.sh --full-kernel` rebuilds all 1,126 modules and audits the axioms of the endpoints.
 
 ## Short independent review path
 

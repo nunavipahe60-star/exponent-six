@@ -2,8 +2,9 @@
   B1 + P6/P7 (owner: R1). No imaginary quadratic field in the gap has class-group exponent
   dividing 6, given the positive-kernel input (A3) as an explicit hypothesis.
 
-  STATUS: NOT YET COMPILED by R1, who has no Lean toolchain. This module imports the
-  1,124-module tight manifest, so it is deliberately left out of the default `ExpSix` target.
+  STATUS: compiled and kernel-audited at dd6e1e5 (`./verify.sh --full-kernel`, step 7), with
+  standard axioms only. This module imports the 1,124-module tight manifest, so it is
+  deliberately left out of the default `ExpSix` target.
   Build it with the kernel driver, which reuses the cached manifest:
 
     python lean/tools/build_kernel_chunks.py --target ExpSix.TightGap \
