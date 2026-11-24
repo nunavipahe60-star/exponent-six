@@ -20,22 +20,53 @@ structure ShapeRow where
 def ShapeRow.keyValue (row : ShapeRow) : ℕ :=
   PairReduction.pairK row.shape.p row.shape.r row.shape.y row.shape.v
 
+def lookupRoot (ws : Array PairSieve.RootWitness) (a : ℕ) :
+    ℕ → ℕ → ℕ → Option PairSieve.RootWitness
+  | 0, _, _ => none
+  | fuel + 1, lo, hi =>
+    if lo < hi then
+      let mid := (lo+hi)/2
+      if hm : mid < ws.size then
+        let w := ws[mid]'hm
+        if w.a = a then some w
+        else if w.a < a then lookupRoot ws a fuel (mid+1) hi
+        else lookupRoot ws a fuel lo mid
+      else none
+    else none
+
+/-- Witnesses are emitted in increasing divisor order. A failed search rejects
+    any integral candidate, and the tag is independently checked in rejects. -/
 def ShapeRow.witnessFor (row : ShapeRow) (a : ℕ) : Option PairSieve.RootWitness :=
-  row.witnesses.find? (fun w => w.a == a)
+  let ws := row.witnesses.toArray
+  lookupRoot ws a 64 0 ws.size
 
 /-- The complementary divisor is computed from the independently recomputed row key. -/
 def ShapeRow.checkDivisor (row : ShapeRow) (a : ℕ) : Bool :=
   let b := row.keyValue / a
-  match PairSieve.candidate? Lgap row.shape.p row.shape.r row.shape.y row.shape.v a b with
-  | none => true
-  | some _ => PairSieve.rejects Lgap row.shape.p row.shape.r row.shape.y row.shape.v
-      a b (row.witnessFor a)
+  PairSieve.rejects Lgap row.shape.p row.shape.r row.shape.y row.shape.v a b (row.witnessFor a)
+
+def ShapeRow.divisorLower (row : ShapeRow) : ℕ :=
+  row.keyValue / (PairSieve.maxPartner Lgap row.shape.p row.shape.r row.shape.y row.shape.v + 1)
+
+theorem ShapeRow.divisor_bounds {row : ShapeRow} {a b : ℕ} {c : PairSieve.Candidate}
+    (hprod : a*b = row.keyValue)
+    (hc : PairSieve.candidate? Lgap row.shape.p row.shape.r row.shape.y row.shape.v a b = some c) :
+    row.divisorLower ≤ a ∧ a ≤ PairSieve.upperRoot row.keyValue := by
+  obtain ⟨hab,hb⟩ := PairSieve.candidate_bounds hc
+  constructor
+  · unfold ShapeRow.divisorLower
+    apply Nat.le_of_lt_succ
+    apply (Nat.div_lt_iff_lt_mul (Nat.succ_pos _)).2
+    rw [← hprod]
+    apply lt_of_le_of_lt (Nat.mul_le_mul_left a hb)
+    nlinarith only [Nat.zero_le a, Nat.zero_le (PairSieve.maxPartner Lgap row.shape.p row.shape.r row.shape.y row.shape.v)]
+  · exact (Nat.le_sqrt.mpr (hprod ▸ Nat.mul_le_mul_left a hab.le)).trans (PairSieve.upperRoot_spec _)
 
 /-- A certified table of primes can supply `prime`; its soundness is required below. -/
 def rowOKWith (prime : ℕ → Bool) (row : ShapeRow) : Bool :=
   ListDivisors.validWith prime row.factors &&
     (decide (ListDivisors.value row.factors = row.keyValue) &&
-      (ListDivisors.expand row.factors).all row.checkDivisor)
+      ListDivisors.allBetween row.divisorLower (PairSieve.upperRoot row.keyValue) row.factors row.checkDivisor)
 
 def rowOK (row : ShapeRow) : Bool := rowOKWith (fun p => decide p.Prime) row
 
@@ -51,6 +82,12 @@ def manifestOK (w : Window) (chunks : List (List ShapeRow)) : Bool :=
 /-- The proposition proved for each required shape by the chunk hierarchy. -/
 def HasCheckedRow (prime : ℕ → Bool) (s : Shape) : Prop :=
   ∃ row : ShapeRow, row.shape = s ∧ rowOKWith prime row = true
+
+/-- The backend-independent proposition a verified row contributes to a window. -/
+def ShapeExcluded (s : Shape) : Prop :=
+  ∀ {a b : ℕ}, 0 < a → a*b = PairReduction.pairK s.p s.r s.y s.v →
+    ∀ {c : PairSieve.Candidate}, PairSieve.candidate? Lgap s.p s.r s.y s.v a b = some c →
+      PairSieve.TraceAdmissible s.p c.x → False
 
 private theorem checked_of_mem {α : Type*} {test : α → Bool} {xs : List α}
     {x : α} (h : xs.all test = true) (hx : x ∈ xs) : test x = true := by
@@ -74,6 +111,20 @@ def pairBlockOfRows (prime : ℕ → Bool) (p r : ℕ) (rows : List ShapeRow)
     obtain ⟨row, hr, heq⟩ := List.mem_map.mp hmem
     exact ⟨row, heq, checked_of_mem hrow hr⟩
 
+/-- A chunk may verify its own short table of factor primes and export
+    coverage to a common proposition shared by all chunks. -/
+def pairBlockOfSoundRows (prime : ℕ → Bool) (sound : ∀ n, prime n = true → n.Prime)
+    (p r : ℕ) (rows : List ShapeRow) (hlayout : rows.map ShapeRow.shape = pairSlice p r)
+    (hok : chunkOKWith prime rows = true) :
+    PairBlock p (HasCheckedRow (fun n => decide n.Prime)) where
+  r := r
+  verified := by
+    intro s hs
+    obtain ⟨row, heq, h⟩ := (pairBlockOfRows prime p r rows hlayout hok).verified s hs
+    refine ⟨row, heq, ?_⟩
+    simp only [rowOKWith, Bool.and_eq_true] at h ⊢
+    exact ⟨ListDivisors.validWith_mono (fun n hn => decide_eq_true (sound n hn)) h.1, h.2⟩
+
 /-- A checked factorization and the checks on its expanded divisors cover *any*
 positive factor pair of the row key, even ones absent from the witness list. -/
 theorem row_excludes_with {prime : ℕ → Bool} (sound : ∀ n, prime n = true → n.Prime)
@@ -85,12 +136,19 @@ theorem row_excludes_with {prime : ℕ → Bool} (sound : ∀ n, prime n = true 
   have hdiv : a ∣ row.keyValue := ⟨b, hprod.symm⟩
   have hcomp : row.keyValue / a = b := by
     rw [← hprod, Nat.mul_comm a b, Nat.mul_div_cancel _ ha]
-  have htest := ListDivisors.test_of_all (ListDivisors.valid_of_checked sound hrow.1)
-    hrow.2.1 hrow.2.2 hdiv
+  obtain ⟨hlo,hhi⟩ := ShapeRow.divisor_bounds hprod hc
+  have htest := ListDivisors.allBetween_sound (ListDivisors.valid_of_checked sound hrow.1)
+    hrow.2.2 (hrow.2.1 ▸ hdiv) hlo hhi
   change row.checkDivisor a = true at htest
-  simp only [ShapeRow.checkDivisor, hcomp, hc] at htest
+  simp only [ShapeRow.checkDivisor, hcomp] at htest
   rw [PairSieve.rejects_sound (row.witnessFor a) hc hadm] at htest
   cases htest
+
+theorem shapeExcluded_of_checked {prime : ℕ → Bool} (sound : ∀ n, prime n = true → n.Prime)
+    {s : Shape} (checked : HasCheckedRow prime s) : ShapeExcluded s := by
+  obtain ⟨row, rfl, hr⟩ := checked
+  intro a b ha hprod c hc hadm
+  exact row_excludes_with sound hr ha hprod hc hadm
 
 /-- A per-chunk proof may be supplied separately for each emitted chunk. -/
 theorem checked_row_of_manifest {prime : ℕ → Bool} {w : Window}
@@ -169,6 +227,20 @@ private theorem fieldData_excluded_at {prime : ℕ → Bool} (sound : ∀ n, pri
     hx F.hy hu G.hy hL F.hnorm G.hnorm)
   exact norm_witnesses_excluded_at sound hs (checked hs) hx hu hs.y_lt_p hL F.hpx G.hpx
     F.hnorm G.hnorm (PairSieve.traceAdmissible_of_admissible hadm)
+
+/-- A window can mix independently proved sources of shape-level exclusion. -/
+theorem fieldData_excluded_of_shapeCover {w : Window} (covered : ∀ s, Valid w s → ShapeExcluded s)
+    {D : ℤ} {p r : ℕ} (hD : D < 0) (hL : Lgap ≤ D.natAbs)
+    (hp : p.Prime) (hr : r.Prime) (hlo : 2069 ≤ p) (hpmax : p ≤ w.pMax)
+    (hpr : p < r) (hrmax : r ≤ w.rMax) (F : FieldData D p) (G : PairBridge.NormWitness D r) : False := by
+  obtain ⟨hx, _, hadm⟩ := admissible_of_fieldData hD F hL
+  have hu : 0 < G.x := Nat.pos_of_ne_zero (fun hz => G.hpx (hz ▸ Nat.dvd_zero r))
+  let s : Shape := ⟨p, r, F.y, G.y⟩
+  have hs : Valid w s := mem_shapes_iff.mp (of_norm_witnesses hp hr hlo hpmax hpr hrmax
+    hx F.hy hu G.hy hL F.hnorm G.hnorm)
+  obtain ⟨a,b,ha,_,hk,hc⟩ := PairSieve.norms_produce_candidate hp hr hpr hx F.hy hu G.hy
+    hs.y_lt_p hL F.hpx G.hpx F.hnorm G.hnorm
+  exact covered s hs ha hk hc (PairSieve.traceAdmissible_of_admissible hadm)
 
 /-- Arithmetic endpoint for either window, including the broad bootstrap. The
 finite certificate supplies `covered`; the analytic argument supplies its window. -/

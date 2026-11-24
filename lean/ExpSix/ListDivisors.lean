@@ -234,3 +234,139 @@ example : validB [(2, 2), (2, 1)] = false ∧ validB [(4, 1)] = false ∧
     validB [(3, 0)] = false := by decide
 
 end ExpSix.ListDivisors
+
+namespace ExpSix.ListDivisors
+
+private theorem value_append (fs gs : PrimePowers) : value (fs ++ gs) = value fs * value gs := by
+  induction fs with
+  | nil => simp [value]
+  | cons f fs ih => rcases f with ⟨p,e⟩; simp [value, ih, Nat.mul_assoc]
+
+theorem validWith_mono {prime test : ℕ → Bool} (himp : ∀ n, prime n = true → test n = true)
+    {fs : PrimePowers} (h : validWith prime fs = true) : validWith test fs = true := by
+  induction fs with
+  | nil => rfl
+  | cons f fs ih =>
+    rcases f with ⟨p,e⟩
+    simp only [validWith, Bool.and_eq_true] at h ⊢
+    exact ⟨himp p h.1, h.2.1, h.2.2.1, ih h.2.2.2⟩
+
+private theorem value_reverse (fs : PrimePowers) : value fs.reverse = value fs := by
+  induction fs with
+  | nil => rfl
+  | cons f fs ih =>
+    rcases f with ⟨p,e⟩
+    simp [value_append, ih, value, Nat.mul_comm]
+
+private theorem mem_expand_of_prime {fs : PrimePowers} (hp : ∀ f ∈ fs, Nat.Prime f.1)
+    {d : ℕ} (hd : d ∣ value fs) : d ∈ expand fs := by
+  induction fs generalizing d with
+  | nil => simpa [value, expand] using hd
+  | cons f fs ih =>
+    rcases f with ⟨p,e⟩
+    apply mem_blocks_of_dvd (hp (p,e) (by simp)) _ e hd
+    exact fun a ha => ih (fun f h => hp f (List.mem_cons_of_mem _ h)) ha
+
+private theorem factor_prime_of_valid {fs : PrimePowers} (hv : Valid fs) :
+    ∀ f ∈ fs, Nat.Prime f.1 := by
+  induction fs with
+  | nil => simp
+  | cons f fs ih =>
+    rcases f with ⟨p,e⟩
+    intro g hg
+    rcases List.mem_cons.mp hg with rfl | h
+    · exact hv.1
+    · exact ih hv.2.2.2 _ h
+
+private theorem value_pos_of_prime {fs : PrimePowers} (hp : ∀ f ∈ fs, Nat.Prime f.1) :
+    0 < value fs := by
+  induction fs with
+  | nil => decide
+  | cons f fs ih =>
+    rcases f with ⟨p,e⟩
+    exact Nat.mul_pos (Nat.pow_pos (hp (p,e) (by simp)).pos)
+      (ih (fun f hf => hp _ (List.mem_cons_of_mem _ hf)))
+
+private theorem dvd_of_mem_expand {fs : PrimePowers} {d : ℕ} (hd : d ∈ expand fs) : d ∣ value fs := by
+  induction fs generalizing d with
+  | nil => simpa [expand, value] using hd
+  | cons f fs ih =>
+    rcases f with ⟨p,e⟩
+    exact dvd_of_mem_blocks (fun a ha => ih ha) e hd
+
+/-- Test the children for exponents zero through e without allocating a list of divisors. -/
+def visitPowers (p : ℕ) (next : ℕ → Bool) : ℕ → ℕ → Bool
+  | 0, a => next a
+  | e + 1, a => next a && visitPowers p next e (a*p)
+
+private theorem visitPowers_sound {p : ℕ} {next : ℕ → Bool} {e a : ℕ}
+    (h : visitPowers p next e a = true) (j : ℕ) (hj : j ≤ e) : next (a * p^j) = true := by
+  induction e generalizing j a with
+  | zero =>
+    have : j = 0 := by omega
+    simpa [this, visitPowers] using h
+  | succ e ih =>
+    simp only [visitPowers, Bool.and_eq_true] at h
+    obtain ⟨hn, rest⟩ := h
+    cases j with
+    | zero => simpa using hn
+    | succ j =>
+      simpa only [pow_succ', Nat.mul_assoc] using ih rest j (by omega)
+
+private theorem factor_of_mem_blocks {p d : ℕ} {ds : List ℕ} (e : ℕ)
+    (h : d ∈ blocks p ds e) : ∃ j ≤ e, ∃ t ∈ ds, d = p^j * t := by
+  induction e generalizing d with
+  | zero => exact ⟨0, by omega, d, h, by simp⟩
+  | succ e ih =>
+    rcases List.mem_append.mp h with hd | hm
+    · exact ⟨0, by omega, d, hd, by simp⟩
+    · obtain ⟨a, ha, rfl⟩ := List.mem_map.mp hm
+      obtain ⟨j,hj,t,ht,rfl⟩ := ih ha
+      exact ⟨j+1, by omega, t, ht, by simp [pow_succ', Nat.mul_assoc]⟩
+
+/-- A subtree with initial scale a can only yield divisors between a and
+    a times the product of its remaining prime powers. Inspect larger primes first. -/
+def visitInterval (lo hi : ℕ) (test : ℕ → Bool) : PrimePowers → ℕ → Bool
+  | [], a => if lo ≤ a ∧ a ≤ hi then test a else true
+  | (p,e)::fs, a =>
+    if hi < a ∨ a * (p^e * value fs) < lo then true
+    else visitPowers p (visitInterval lo hi test fs) e a
+
+private theorem visitInterval_sound {lo hi : ℕ} {test : ℕ → Bool} {fs : PrimePowers}
+    (hpr : ∀ f ∈ fs, Nat.Prime f.1) {a d : ℕ}
+    (h : visitInterval lo hi test fs a = true) (hd : d ∈ expand fs)
+    (hl : lo ≤ a*d) (hh : a*d ≤ hi) : test (a*d) = true := by
+  induction fs generalizing a d with
+  | nil =>
+    have he : d = 1 := by simpa [expand] using hd
+    subst d
+    simp only [Nat.mul_one] at *
+    simpa [visitInterval, hl, hh] using h
+  | cons f fs ih =>
+    rcases f with ⟨p,e⟩
+    have hpd : 0 < p := (hpr (p,e) (by simp)).pos
+    have hpfs : ∀ f ∈ fs, Nat.Prime f.1 := fun f hf => hpr _ (List.mem_cons_of_mem _ hf)
+    have hpos := value_pos_of_prime hpfs
+    have hdiv : d ∣ p^e * value fs := dvd_of_mem_expand (fs := (p,e)::fs) hd
+    have hdhi := Nat.le_of_dvd (Nat.mul_pos (Nat.pow_pos hpd) hpos) hdiv
+    have hdp : 0 < d := Nat.pos_of_dvd_of_pos hdiv (Nat.mul_pos (Nat.pow_pos hpd) hpos)
+    have hmin : a ≤ a*d := Nat.le_mul_of_pos_right _ hdp
+    have hmax : a*d ≤ a*(p^e * value fs) := Nat.mul_le_mul_left _ hdhi
+    simp only [visitInterval, show ¬(hi < a ∨ a*(p^e*value fs) < lo) by omega, ↓reduceIte] at h
+    obtain ⟨j,hj,t,ht,rfl⟩ := factor_of_mem_blocks e hd
+    simpa only [Nat.mul_assoc] using
+      ih hpfs (visitPowers_sound h j hj) ht (by simpa only [Nat.mul_assoc] using hl)
+        (by simpa only [Nat.mul_assoc] using hh)
+
+def allBetween (lo hi : ℕ) (fs : PrimePowers) (test : ℕ → Bool) : Bool :=
+  visitInterval lo hi test fs.reverse 1
+
+theorem allBetween_sound {lo hi : ℕ} {fs : PrimePowers} {test : ℕ → Bool}
+    (hv : Valid fs) (h : allBetween lo hi fs test = true) {d : ℕ}
+    (hd : d ∣ value fs) (hl : lo ≤ d) (hh : d ≤ hi) : test d = true := by
+  have hp : ∀ f ∈ fs.reverse, Nat.Prime f.1 := fun f hf =>
+    factor_prime_of_valid hv f (List.mem_reverse.mp hf)
+  have hmem := mem_expand_of_prime hp (show d ∣ value fs.reverse by simpa [value_reverse] using hd)
+  simpa only [Nat.one_mul] using visitInterval_sound hp h hmem (by simpa using hl) (by simpa using hh)
+
+end ExpSix.ListDivisors

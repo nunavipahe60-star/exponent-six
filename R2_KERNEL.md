@@ -1,5 +1,20 @@
 # R2 finite certificates
 
+## Full-window kernel build
+
+The production emitter uses named Pratt theorems for individual factor primes. Each row shard imports a search tree for the primes it uses. For each first prime, Lean certifies a table of excluded trace residues against the existence of nonzero modular square roots. Row proofs split the factorization into two groups, search the admissible divisor interval, and check the trace or its exclusion. A theorem for each prime pair covers the canonical coordinates, including both strict coordinate bounds. The manifest combines these theorems over the closed prime window.
+
+From the repository root, the following commands reproduce the tight source and check the two endpoints. For a checkout with an existing `lean/.lake/packages` cache, the build driver discovers the pinned compiler and dependencies. A separate cache can be supplied with `--packages PATH`. Repeating the build reuses successful modules after verifying their source, dependency fingerprints and output hashes.
+
+```text
+python lean/tools/kernel_chunks.py build --window tight --out tight-data
+python lean/tools/kernel_chunks.py verify --window tight --data tight-data
+python lean/tools/kernel_chunks.py emit-production --window tight --data tight-data --lean-root lean/ExpSix/Generated --module-prefix ExpSix.Generated --rows-per-shard 256 --pratt-per-shard 512 --root-masks
+python lean/tools/build_kernel_chunks.py --target ExpSix.Generated.Manifest --theorem ExpSix.Generated.tightCovered --theorem ExpSix.Generated.tightFieldDataExcluded --jobs 3
+```
+
+The build checks every project module with `-DwarningAsError=true`. The final audit imports the checked manifest and records the transitive axioms of each endpoint in `lean/.lake/kernel-build/progress.json`. The older three-pair pilot and its negative controls use explicit square-root witnesses.
+
 This pilot targets project commit `0b2059e`, Lean v4.37.0-rc1 and Mathlib `31ce06ea`. Extract the archive at the root of a working copy. It contains repository-relative paths and includes the revised `lean/ExpSix/PairBridge.lean`. The existing 28-theorem axiom report applies to the base commit. The pilot's module timings and declaration-by-declaration axiom reports are in `lean/certificates/r2_pilot_timing.json`.
 
 ## Counting the search

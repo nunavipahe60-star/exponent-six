@@ -16,3 +16,5 @@ public import ExpSix.PairCandidates
 public import ExpSix.PairWitnesses
 public import ExpSix.P7
 public import ExpSix.Pilot.Manifest
+public import ExpSix.FastMITM
+public import ExpSix.TraceMask

@@ -1,0 +1,170 @@
+module
+
+public import ExpSix.Pratt
+import ExpSix.Generated.Pratt0000
+import ExpSix.Generated.Pratt0001
+import ExpSix.Generated.Pratt0002
+import ExpSix.Generated.Pratt0003
+import ExpSix.Generated.Pratt0004
+import ExpSix.Generated.Pratt0005
+import ExpSix.Generated.Pratt0006
+import ExpSix.Generated.Pratt0007
+import ExpSix.Generated.Pratt0008
+import ExpSix.Generated.Pratt0009
+import ExpSix.Generated.Pratt0010
+import ExpSix.Generated.Pratt0011
+import ExpSix.Generated.Pratt0012
+import ExpSix.Generated.Pratt0013
+import ExpSix.Generated.Pratt0014
+import ExpSix.Generated.Pratt0015
+import ExpSix.Generated.Pratt0016
+import ExpSix.Generated.Pratt0017
+import ExpSix.Generated.Pratt0018
+import ExpSix.Generated.Pratt0019
+import ExpSix.Generated.Pratt0020
+import ExpSix.Generated.Pratt0021
+import ExpSix.Generated.Pratt0022
+import ExpSix.Generated.Pratt0023
+import ExpSix.Generated.Pratt0024
+import ExpSix.Generated.Pratt0025
+import ExpSix.Generated.Pratt0026
+import ExpSix.Generated.Pratt0027
+import ExpSix.Generated.Pratt0028
+import ExpSix.Generated.Pratt0029
+import ExpSix.Generated.Pratt0030
+import ExpSix.Generated.Pratt0031
+import ExpSix.Generated.Pratt0032
+import ExpSix.Generated.Pratt0033
+import ExpSix.Generated.Pratt0034
+import ExpSix.Generated.Pratt0035
+import ExpSix.Generated.Pratt0036
+import ExpSix.Generated.Pratt0037
+import ExpSix.Generated.Pratt0038
+import ExpSix.Generated.Pratt0039
+import ExpSix.Generated.Pratt0040
+import ExpSix.Generated.Pratt0042
+import ExpSix.Generated.Pratt0043
+import ExpSix.Generated.Pratt0045
+import ExpSix.Generated.Pratt0046
+import ExpSix.Generated.Pratt0047
+import ExpSix.Generated.Pratt0048
+import ExpSix.Generated.Pratt0049
+import ExpSix.Generated.Pratt0050
+import ExpSix.Generated.Pratt0051
+import ExpSix.Generated.Pratt0053
+import ExpSix.Generated.Pratt0054
+import ExpSix.Generated.Pratt0056
+import ExpSix.Generated.Pratt0057
+import ExpSix.Generated.Pratt0058
+import ExpSix.Generated.Pratt0059
+import ExpSix.Generated.Pratt0060
+import ExpSix.Generated.Pratt0063
+import ExpSix.Generated.Pratt0064
+import ExpSix.Generated.Pratt0065
+import ExpSix.Generated.Pratt0066
+import ExpSix.Generated.Pratt0067
+import ExpSix.Generated.Pratt0068
+import ExpSix.Generated.Pratt0069
+import ExpSix.Generated.Pratt0070
+import ExpSix.Generated.Pratt0071
+import ExpSix.Generated.Pratt0072
+import ExpSix.Generated.Pratt0073
+import ExpSix.Generated.Pratt0075
+import ExpSix.Generated.Pratt0077
+import ExpSix.Generated.Pratt0078
+import ExpSix.Generated.Pratt0080
+import ExpSix.Generated.Pratt0081
+import ExpSix.Generated.Pratt0083
+import ExpSix.Generated.Pratt0084
+import ExpSix.Generated.Pratt0085
+import ExpSix.Generated.Pratt0086
+import ExpSix.Generated.Pratt0087
+import ExpSix.Generated.Pratt0088
+import ExpSix.Generated.Pratt0089
+import ExpSix.Generated.Pratt0090
+import ExpSix.Generated.Pratt0091
+import ExpSix.Generated.Pratt0092
+import ExpSix.Generated.Pratt0094
+import ExpSix.Generated.Pratt0095
+import ExpSix.Generated.Pratt0096
+import ExpSix.Generated.Pratt0097
+import ExpSix.Generated.Pratt0098
+import ExpSix.Generated.Pratt0099
+import ExpSix.Generated.Pratt0100
+import ExpSix.Generated.Pratt0101
+import ExpSix.Generated.Pratt0103
+import ExpSix.Generated.Pratt0104
+import ExpSix.Generated.Pratt0105
+import ExpSix.Generated.Pratt0106
+import ExpSix.Generated.Pratt0107
+import ExpSix.Generated.Pratt0108
+import ExpSix.Generated.Pratt0110
+import ExpSix.Generated.Pratt0111
+import ExpSix.Generated.Pratt0113
+import ExpSix.Generated.Pratt0114
+import ExpSix.Generated.Pratt0116
+import ExpSix.Generated.Pratt0117
+import ExpSix.Generated.Pratt0118
+import ExpSix.Generated.Pratt0119
+import ExpSix.Generated.Pratt0120
+import ExpSix.Generated.Pratt0121
+import ExpSix.Generated.Pratt0122
+import ExpSix.Generated.Pratt0123
+import ExpSix.Generated.Pratt0125
+import ExpSix.Generated.Pratt0126
+import ExpSix.Generated.Pratt0127
+import ExpSix.Generated.Pratt0128
+import ExpSix.Generated.Pratt0129
+import ExpSix.Generated.Pratt0130
+import ExpSix.Generated.Pratt0132
+import ExpSix.Generated.Pratt0133
+import ExpSix.Generated.Pratt0135
+import ExpSix.Generated.Pratt0136
+import ExpSix.Generated.Pratt0137
+import ExpSix.Generated.Pratt0138
+import ExpSix.Generated.Pratt0139
+import ExpSix.Generated.Pratt0140
+import ExpSix.Generated.Pratt0141
+import ExpSix.Generated.Pratt0142
+import ExpSix.Generated.Pratt0144
+import ExpSix.Generated.Pratt0145
+import ExpSix.Generated.Pratt0146
+import ExpSix.Generated.Pratt0147
+import ExpSix.Generated.Pratt0148
+import ExpSix.Generated.Pratt0149
+import ExpSix.Generated.Pratt0150
+import ExpSix.Generated.Pratt0151
+import ExpSix.Generated.Pratt0152
+import ExpSix.Generated.Pratt0153
+import ExpSix.Generated.Pratt0155
+import ExpSix.Generated.Pratt0156
+import ExpSix.Generated.Pratt0157
+import ExpSix.Generated.Pratt0158
+import ExpSix.Generated.Pratt0159
+import ExpSix.Generated.Pratt0160
+import ExpSix.Generated.Pratt0161
+import ExpSix.Generated.Pratt0163
+import ExpSix.Generated.Pratt0165
+import ExpSix.Generated.Pratt0166
+import ExpSix.Generated.Pratt0167
+import ExpSix.Generated.Pratt0168
+import ExpSix.Generated.Pratt0169
+import ExpSix.Generated.Pratt0170
+import ExpSix.Generated.Pratt0171
+import ExpSix.Generated.Pratt0172
+import ExpSix.Generated.Pratt0173
+
+@[expose] public section
+
+namespace ExpSix.Generated
+
+set_option maxRecDepth 100000
+set_option maxHeartbeats 0
+
+def factorTree0272 : ExpSix.PrimeTree := (.fork 207301 (.fork 2861 (.fork 491 (.fork 163 (.fork 67 (.fork 29 (.fork 11 (.fork 5 (.fork 3 (.leaf 2) (.leaf 3)) (.fork 7 (.leaf 5) (.leaf 7))) (.fork 17 (.fork 13 (.leaf 11) (.leaf 13)) (.fork 19 (.leaf 17) (.fork 23 (.leaf 19) (.leaf 23))))) (.fork 43 (.fork 37 (.fork 31 (.leaf 29) (.leaf 31)) (.fork 41 (.leaf 37) (.leaf 41))) (.fork 53 (.fork 47 (.leaf 43) (.leaf 47)) (.fork 59 (.leaf 53) (.fork 61 (.leaf 59) (.leaf 61)))))) (.fork 107 (.fork 83 (.fork 73 (.fork 71 (.leaf 67) (.leaf 71)) (.fork 79 (.leaf 73) (.leaf 79))) (.fork 97 (.fork 89 (.leaf 83) (.leaf 89)) (.fork 101 (.leaf 97) (.fork 103 (.leaf 101) (.leaf 103))))) (.fork 131 (.fork 113 (.fork 109 (.leaf 107) (.leaf 109)) (.fork 127 (.leaf 113) (.leaf 127))) (.fork 149 (.fork 137 (.leaf 131) (.leaf 137)) (.fork 151 (.leaf 149) (.fork 157 (.leaf 151) (.leaf 157))))))) (.fork 311 (.fork 223 (.fork 191 (.fork 173 (.fork 167 (.leaf 163) (.leaf 167)) (.fork 179 (.leaf 173) (.leaf 179))) (.fork 197 (.fork 193 (.leaf 191) (.leaf 193)) (.fork 199 (.leaf 197) (.fork 211 (.leaf 199) (.leaf 211))))) (.fork 257 (.fork 239 (.fork 229 (.leaf 223) (.leaf 229)) (.fork 251 (.leaf 239) (.leaf 251))) (.fork 269 (.fork 263 (.leaf 257) (.leaf 263)) (.fork 271 (.leaf 269) (.fork 283 (.leaf 271) (.leaf 283)))))) (.fork 389 (.fork 337 (.fork 317 (.fork 313 (.leaf 311) (.leaf 313)) (.fork 331 (.leaf 317) (.leaf 331))) (.fork 353 (.fork 347 (.leaf 337) (.leaf 347)) (.fork 373 (.leaf 353) (.fork 379 (.leaf 373) (.leaf 379))))) (.fork 431 (.fork 419 (.fork 401 (.leaf 389) (.leaf 401)) (.fork 421 (.leaf 419) (.leaf 421))) (.fork 449 (.fork 439 (.leaf 431) (.leaf 439)) (.fork 463 (.leaf 449) (.fork 467 (.leaf 463) (.leaf 467)))))))) (.fork 1259 (.fork 827 (.fork 587 (.fork 523 (.fork 503 (.fork 499 (.leaf 491) (.leaf 499)) (.fork 509 (.leaf 503) (.leaf 509))) (.fork 563 (.fork 557 (.leaf 523) (.leaf 557)) (.fork 571 (.leaf 563) (.fork 577 (.leaf 571) (.leaf 577))))) (.fork 677 (.fork 643 (.fork 593 (.leaf 587) (.leaf 593)) (.fork 661 (.leaf 643) (.leaf 661))) (.fork 797 (.fork 727 (.leaf 677) (.leaf 727)) (.fork 809 (.leaf 797) (.fork 811 (.leaf 809) (.leaf 811)))))) (.fork 1093 (.fork 929 (.fork 907 (.fork 853 (.leaf 827) (.leaf 853)) (.fork 911 (.leaf 907) (.leaf 911))) (.fork 997 (.fork 983 (.leaf 929) (.leaf 983)) (.fork 1021 (.leaf 997) (.fork 1051 (.leaf 1021) (.leaf 1051))))) (.fork 1193 (.fork 1171 (.fork 1109 (.leaf 1093) (.leaf 1109)) (.fork 1181 (.leaf 1171) (.leaf 1181))) (.fork 1217 (.fork 1213 (.leaf 1193) (.leaf 1213)) (.fork 1231 (.leaf 1217) (.fork 1237 (.leaf 1231) (.leaf 1237))))))) (.fork 1871 (.fork 1523 (.fork 1373 (.fork 1289 (.fork 1277 (.leaf 1259) (.leaf 1277)) (.fork 1307 (.leaf 1289) (.leaf 1307))) (.fork 1399 (.fork 1381 (.leaf 1373) (.leaf 1381)) (.fork 1499 (.leaf 1399) (.fork 1511 (.leaf 1499) (.leaf 1511))))) (.fork 1601 (.fork 1583 (.fork 1571 (.leaf 1523) (.leaf 1571)) (.fork 1597 (.leaf 1583) (.leaf 1597))) (.fork 1609 (.fork 1607 (.leaf 1601) (.leaf 1607)) (.fork 1619 (.leaf 1609) (.fork 1627 (.leaf 1619) (.leaf 1627)))))) (.fork 2287 (.fork 1949 (.fork 1879 (.fork 1877 (.leaf 1871) (.leaf 1877)) (.fork 1933 (.leaf 1879) (.leaf 1933))) (.fork 1997 (.fork 1973 (.leaf 1949) (.leaf 1973)) (.fork 2237 (.leaf 1997) (.fork 2281 (.leaf 2237) (.leaf 2281))))) (.fork 2531 (.fork 2333 (.fork 2309 (.leaf 2287) (.leaf 2309)) (.fork 2339 (.leaf 2333) (.fork 2341 (.leaf 2339) (.leaf 2341)))) (.fork 2819 (.fork 2789 (.leaf 2531) (.leaf 2789)) (.fork 2833 (.leaf 2819) (.fork 2837 (.leaf 2833) (.leaf 2837))))))))) (.fork 20857 (.fork 6841 (.fork 4651 (.fork 3331 (.fork 3037 (.fork 2939 (.fork 2927 (.leaf 2861) (.leaf 2927)) (.fork 2971 (.leaf 2939) (.leaf 2971))) (.fork 3187 (.fork 3119 (.leaf 3037) (.leaf 3119)) (.fork 3209 (.leaf 3187) (.fork 3257 (.leaf 3209) (.leaf 3257))))) (.fork 3517 (.fork 3373 (.fork 3343 (.leaf 3331) (.leaf 3343)) (.fork 3407 (.leaf 3373) (.leaf 3407))) (.fork 4241 (.fork 3769 (.leaf 3517) (.leaf 3769)) (.fork 4483 (.leaf 4241) (.fork 4547 (.leaf 4483) (.leaf 4547)))))) (.fork 5779 (.fork 5167 (.fork 4663 (.fork 4657 (.leaf 4651) (.leaf 4657)) (.fork 4691 (.leaf 4663) (.leaf 4691))) (.fork 5281 (.fork 5197 (.leaf 5167) (.leaf 5197)) (.fork 5441 (.leaf 5281) (.fork 5741 (.leaf 5441) (.leaf 5741))))) (.fork 6311 (.fork 6037 (.fork 5927 (.leaf 5779) (.leaf 5927)) (.fork 6121 (.leaf 6037) (.leaf 6121))) (.fork 6397 (.fork 6367 (.leaf 6311) (.leaf 6367)) (.fork 6553 (.leaf 6397) (.fork 6619 (.leaf 6553) (.leaf 6619))))))) (.fork 10301 (.fork 8807 (.fork 7703 (.fork 7331 (.fork 7187 (.leaf 6841) (.leaf 7187)) (.fork 7549 (.leaf 7331) (.leaf 7549))) (.fork 7951 (.fork 7741 (.leaf 7703) (.leaf 7741)) (.fork 8329 (.leaf 7951) (.fork 8779 (.leaf 8329) (.leaf 8779))))) (.fork 9811 (.fork 9463 (.fork 9241 (.leaf 8807) (.leaf 9241)) (.fork 9533 (.leaf 9463) (.leaf 9533))) (.fork 9839 (.fork 9833 (.leaf 9811) (.leaf 9833)) (.fork 9901 (.leaf 9839) (.fork 9973 (.leaf 9901) (.leaf 9973)))))) (.fork 13217 (.fork 11329 (.fork 11173 (.fork 10781 (.leaf 10301) (.leaf 10781)) (.fork 11317 (.leaf 11173) (.leaf 11317))) (.fork 12073 (.fork 11549 (.leaf 11329) (.leaf 11549)) (.fork 12487 (.leaf 12073) (.fork 12959 (.leaf 12487) (.leaf 12959))))) (.fork 18169 (.fork 14563 (.fork 13297 (.leaf 13217) (.leaf 13297)) (.fork 15809 (.leaf 14563) (.fork 17033 (.leaf 15809) (.leaf 17033)))) (.fork 18713 (.fork 18413 (.leaf 18169) (.leaf 18413)) (.fork 19843 (.leaf 18713) (.fork 20407 (.leaf 19843) (.leaf 20407)))))))) (.fork 72421 (.fork 46061 (.fork 27583 (.fork 24373 (.fork 23459 (.fork 22441 (.leaf 20857) (.leaf 22441)) (.fork 24107 (.leaf 23459) (.leaf 24107))) (.fork 25409 (.fork 25169 (.leaf 24373) (.leaf 25169)) (.fork 26729 (.leaf 25409) (.fork 26953 (.leaf 26729) (.leaf 26953))))) (.fork 36343 (.fork 31177 (.fork 30029 (.leaf 27583) (.leaf 30029)) (.fork 32299 (.leaf 31177) (.leaf 32299))) (.fork 38273 (.fork 36973 (.leaf 36343) (.leaf 36973)) (.fork 39397 (.leaf 38273) (.fork 45697 (.leaf 39397) (.leaf 45697)))))) (.fork 58391 (.fork 53617 (.fork 52433 (.fork 47317 (.leaf 46061) (.leaf 47317)) (.fork 52709 (.leaf 52433) (.leaf 52709))) (.fork 56597 (.fork 54539 (.leaf 53617) (.leaf 54539)) (.fork 57601 (.leaf 56597) (.fork 57923 (.leaf 57601) (.leaf 57923))))) (.fork 61051 (.fork 60509 (.fork 60139 (.leaf 58391) (.leaf 60139)) (.fork 60631 (.leaf 60509) (.leaf 60631))) (.fork 62213 (.fork 61547 (.leaf 61051) (.leaf 61547)) (.fork 69061 (.leaf 62213) (.fork 70627 (.leaf 69061) (.leaf 70627))))))) (.fork 112621 (.fork 98573 (.fork 87107 (.fork 79111 (.fork 75707 (.leaf 72421) (.leaf 75707)) (.fork 81181 (.leaf 79111) (.leaf 81181))) (.fork 95989 (.fork 92251 (.leaf 87107) (.leaf 92251)) (.fork 96671 (.leaf 95989) (.fork 97373 (.leaf 96671) (.leaf 97373))))) (.fork 101279 (.fork 99289 (.fork 98929 (.leaf 98573) (.leaf 98929)) (.fork 99371 (.leaf 99289) (.leaf 99371))) (.fork 108421 (.fork 101917 (.leaf 101279) (.leaf 101917)) (.fork 111049 (.leaf 108421) (.fork 111593 (.leaf 111049) (.leaf 111593)))))) (.fork 160861 (.fork 140863 (.fork 127301 (.fork 120677 (.leaf 112621) (.leaf 120677)) (.fork 135637 (.leaf 127301) (.leaf 135637))) (.fork 147557 (.fork 143981 (.leaf 140863) (.leaf 143981)) (.fork 156269 (.leaf 147557) (.fork 158071 (.leaf 156269) (.leaf 158071))))) (.fork 178361 (.fork 164387 (.fork 161717 (.leaf 160861) (.leaf 161717)) (.fork 165293 (.leaf 164387) (.fork 166247 (.leaf 165293) (.leaf 166247)))) (.fork 186451 (.fork 180871 (.leaf 178361) (.leaf 180871)) (.fork 191047 (.leaf 186451) (.fork 192749 (.leaf 191047) (.leaf 192749)))))))))) (.fork 30591137 (.fork 2093489 (.fork 505051 (.fork 332317 (.fork 229981 (.fork 226381 (.fork 221941 (.fork 215309 (.leaf 207301) (.leaf 215309)) (.fork 223283 (.leaf 221941) (.leaf 223283))) (.fork 227663 (.fork 227501 (.leaf 226381) (.leaf 227501)) (.fork 228901 (.leaf 227663) (.fork 229343 (.leaf 228901) (.leaf 229343))))) (.fork 286777 (.fork 261301 (.fork 235811 (.leaf 229981) (.leaf 235811)) (.fork 272263 (.leaf 261301) (.leaf 272263))) (.fork 301487 (.fork 291547 (.leaf 286777) (.leaf 291547)) (.fork 305471 (.leaf 301487) (.fork 313583 (.leaf 305471) (.leaf 313583)))))) (.fork 395491 (.fork 351053 (.fork 340267 (.fork 340073 (.leaf 332317) (.leaf 340073)) (.fork 346891 (.leaf 340267) (.leaf 346891))) (.fork 372263 (.fork 355643 (.leaf 351053) (.leaf 355643)) (.fork 381347 (.leaf 372263) (.fork 386569 (.leaf 381347) (.leaf 386569))))) (.fork 462589 (.fork 432023 (.fork 428503 (.leaf 395491) (.leaf 428503)) (.fork 453023 (.leaf 432023) (.leaf 453023))) (.fork 493813 (.fork 491329 (.leaf 462589) (.leaf 491329)) (.fork 495457 (.leaf 493813) (.fork 501637 (.leaf 495457) (.leaf 501637))))))) (.fork 976777 (.fork 689131 (.fork 611393 (.fork 556273 (.fork 525353 (.leaf 505051) (.leaf 525353)) (.fork 587969 (.leaf 556273) (.leaf 587969))) (.fork 646423 (.fork 630901 (.leaf 611393) (.leaf 630901)) (.fork 653363 (.leaf 646423) (.fork 657617 (.leaf 653363) (.leaf 657617))))) (.fork 808081 (.fork 777421 (.fork 752413 (.leaf 689131) (.leaf 752413)) (.fork 805531 (.leaf 777421) (.leaf 805531))) (.fork 838769 (.fork 837113 (.leaf 808081) (.leaf 837113)) (.fork 912367 (.leaf 838769) (.fork 960383 (.leaf 912367) (.leaf 960383)))))) (.fork 1443727 (.fork 1092733 (.fork 1065527 (.fork 1042897 (.leaf 976777) (.leaf 1042897)) (.fork 1087301 (.leaf 1065527) (.leaf 1087301))) (.fork 1142233 (.fork 1112131 (.leaf 1092733) (.leaf 1112131)) (.fork 1314133 (.leaf 1142233) (.fork 1356947 (.leaf 1314133) (.leaf 1356947))))) (.fork 1630117 (.fork 1471693 (.fork 1454021 (.leaf 1443727) (.leaf 1454021)) (.fork 1474717 (.leaf 1471693) (.fork 1504579 (.leaf 1474717) (.leaf 1504579)))) (.fork 1816261 (.fork 1702903 (.leaf 1630117) (.leaf 1702903)) (.fork 1914641 (.leaf 1816261) (.fork 1956047 (.leaf 1914641) (.leaf 1956047)))))))) (.fork 8515867 (.fork 4292887 (.fork 3358141 (.fork 2630099 (.fork 2362273 (.fork 2232677 (.leaf 2093489) (.leaf 2232677)) (.fork 2581211 (.leaf 2362273) (.leaf 2581211))) (.fork 2876777 (.fork 2791843 (.leaf 2630099) (.leaf 2791843)) (.fork 3054769 (.leaf 2876777) (.fork 3345409 (.leaf 3054769) (.leaf 3345409))))) (.fork 3497623 (.fork 3424651 (.fork 3379877 (.leaf 3358141) (.leaf 3379877)) (.fork 3443239 (.leaf 3424651) (.leaf 3443239))) (.fork 3529951 (.fork 3525391 (.leaf 3497623) (.leaf 3525391)) (.fork 3992447 (.leaf 3529951) (.fork 4184303 (.leaf 3992447) (.leaf 4184303)))))) (.fork 6534709 (.fork 5214191 (.fork 4567333 (.fork 4496963 (.leaf 4292887) (.leaf 4496963)) (.fork 4942183 (.leaf 4567333) (.leaf 4942183))) (.fork 5491727 (.fork 5466067 (.leaf 5214191) (.leaf 5466067)) (.fork 5904161 (.leaf 5491727) (.fork 6172927 (.leaf 5904161) (.leaf 6172927))))) (.fork 7623529 (.fork 6595579 (.fork 6588199 (.leaf 6534709) (.leaf 6588199)) (.fork 7080077 (.leaf 6595579) (.leaf 7080077))) (.fork 7801907 (.fork 7735081 (.leaf 7623529) (.leaf 7735081)) (.fork 8206117 (.leaf 7801907) (.fork 8492831 (.leaf 8206117) (.leaf 8492831))))))) (.fork 15085621 (.fork 10145197 (.fork 9313259 (.fork 8832149 (.fork 8772553 (.leaf 8515867) (.leaf 8772553)) (.fork 9186427 (.leaf 8832149) (.leaf 9186427))) (.fork 9741829 (.fork 9472523 (.leaf 9313259) (.leaf 9472523)) (.fork 9993317 (.leaf 9741829) (.fork 10144333 (.leaf 9993317) (.leaf 10144333))))) (.fork 10656353 (.fork 10422331 (.fork 10164667 (.leaf 10145197) (.leaf 10164667)) (.fork 10453741 (.leaf 10422331) (.leaf 10453741))) (.fork 11475509 (.fork 11252779 (.leaf 10656353) (.leaf 11252779)) (.fork 13814611 (.leaf 11475509) (.fork 14647621 (.leaf 13814611) (.leaf 14647621)))))) (.fork 20239399 (.fork 17490631 (.fork 15674597 (.fork 15252691 (.leaf 15085621) (.leaf 15252691)) (.fork 16907327 (.leaf 15674597) (.leaf 16907327))) (.fork 17680921 (.fork 17563187 (.leaf 17490631) (.leaf 17563187)) (.fork 19662287 (.leaf 17680921) (.fork 19747913 (.leaf 19662287) (.leaf 19747913))))) (.fork 24153323 (.fork 22887209 (.fork 20641073 (.leaf 20239399) (.leaf 20641073)) (.fork 23079019 (.leaf 22887209) (.fork 23477197 (.leaf 23079019) (.leaf 23477197)))) (.fork 28930049 (.fork 25865017 (.leaf 24153323) (.leaf 25865017)) (.fork 29880419 (.leaf 28930049) (.fork 30023347 (.leaf 29880419) (.leaf 30023347))))))))) (.fork 2182331453 (.fork 310182823 (.fork 100716809 (.fork 43353203 (.fork 31556923 (.fork 31348579 (.fork 31105463 (.leaf 30591137) (.leaf 31105463)) (.fork 31380757 (.leaf 31348579) (.leaf 31380757))) (.fork 33396631 (.fork 33350021 (.leaf 31556923) (.leaf 33350021)) (.fork 37885033 (.leaf 33396631) (.fork 43312813 (.leaf 37885033) (.leaf 43312813))))) (.fork 57991223 (.fork 48289169 (.fork 44696549 (.leaf 43353203) (.leaf 44696549)) (.fork 54563879 (.leaf 48289169) (.leaf 54563879))) (.fork 68960659 (.fork 63148661 (.leaf 57991223) (.leaf 63148661)) (.fork 73331651 (.leaf 68960659) (.fork 85198559 (.leaf 73331651) (.leaf 85198559)))))) (.fork 172917851 (.fork 124134217 (.fork 106476883 (.fork 103117213 (.leaf 100716809) (.leaf 103117213)) (.fork 115523831 (.leaf 106476883) (.leaf 115523831))) (.fork 133405163 (.fork 125039581 (.leaf 124134217) (.leaf 125039581)) (.fork 155789617 (.leaf 133405163) (.fork 156207523 (.leaf 155789617) (.leaf 156207523))))) (.fork 241388617 (.fork 217865261 (.fork 186716333 (.leaf 172917851) (.leaf 186716333)) (.fork 220709609 (.leaf 217865261) (.leaf 220709609))) (.fork 242718919 (.fork 242173433 (.leaf 241388617) (.leaf 242173433)) (.fork 256802599 (.leaf 242718919) (.fork 308134987 (.leaf 256802599) (.leaf 308134987))))))) (.fork 605461721 (.fork 430148483 (.fork 372413287 (.fork 352897529 (.fork 340907969 (.leaf 310182823) (.leaf 340907969)) (.fork 367461827 (.leaf 352897529) (.leaf 367461827))) (.fork 410799491 (.fork 395184817 (.leaf 372413287) (.leaf 395184817)) (.fork 417202043 (.leaf 410799491) (.fork 418152143 (.leaf 417202043) (.leaf 418152143))))) (.fork 525389933 (.fork 453268483 (.fork 437704489 (.leaf 430148483) (.leaf 437704489)) (.fork 482344271 (.leaf 453268483) (.leaf 482344271))) (.fork 552731833 (.fork 540390517 (.leaf 525389933) (.leaf 540390517)) (.fork 570706699 (.leaf 552731833) (.fork 584011951 (.leaf 570706699) (.leaf 584011951)))))) (.fork 1149277427 (.fork 762711161 (.fork 678027661 (.fork 608618771 (.leaf 605461721) (.leaf 608618771)) (.fork 749629109 (.leaf 678027661) (.leaf 749629109))) (.fork 1015186831 (.fork 799135999 (.leaf 762711161) (.leaf 799135999)) (.fork 1051155331 (.leaf 1015186831) (.fork 1063256153 (.leaf 1051155331) (.leaf 1063256153))))) (.fork 1644257539 (.fork 1169916563 (.fork 1166779787 (.leaf 1149277427) (.leaf 1166779787)) (.fork 1325782091 (.leaf 1169916563) (.fork 1471579969 (.leaf 1325782091) (.leaf 1471579969)))) (.fork 1921944769 (.fork 1767957913 (.leaf 1644257539) (.leaf 1767957913)) (.fork 1977754699 (.leaf 1921944769) (.fork 2082177869 (.leaf 1977754699) (.leaf 2082177869)))))))) (.fork 19070838547 (.fork 6022390813 (.fork 3112435853 (.fork 2566925423 (.fork 2371286501 (.fork 2303421157 (.leaf 2182331453) (.leaf 2303421157)) (.fork 2403102157 (.leaf 2371286501) (.leaf 2403102157))) (.fork 2735656307 (.fork 2576530097 (.leaf 2566925423) (.leaf 2576530097)) (.fork 2757197537 (.leaf 2735656307) (.fork 2837896771 (.leaf 2757197537) (.leaf 2837896771))))) (.fork 4059627449 (.fork 3398746367 (.fork 3222345233 (.leaf 3112435853) (.leaf 3222345233)) (.fork 3792969217 (.leaf 3398746367) (.leaf 3792969217))) (.fork 4304420377 (.fork 4213878913 (.leaf 4059627449) (.leaf 4213878913)) (.fork 5256870121 (.leaf 4304420377) (.fork 5873266463 (.leaf 5256870121) (.leaf 5873266463)))))) (.fork 9710253379 (.fork 8008804267 (.fork 6438305017 (.fork 6024331639 (.leaf 6022390813) (.leaf 6024331639)) (.fork 7072429537 (.leaf 6438305017) (.leaf 7072429537))) (.fork 9055310543 (.fork 8915162471 (.leaf 8008804267) (.leaf 8915162471)) (.fork 9137383933 (.leaf 9055310543) (.fork 9146473547 (.leaf 9137383933) (.leaf 9146473547))))) (.fork 14244299933 (.fork 12955122839 (.fork 10870299673 (.leaf 9710253379) (.leaf 10870299673)) (.fork 13415942923 (.leaf 12955122839) (.leaf 13415942923))) (.fork 14784357397 (.fork 14318576917 (.leaf 14244299933) (.leaf 14318576917)) (.fork 15692679347 (.leaf 14784357397) (.fork 18560107523 (.leaf 15692679347) (.leaf 18560107523))))))) (.fork 37974180617 (.fork 31461857593 (.fork 21136657169 (.fork 19331374357 (.fork 19228043189 (.leaf 19070838547) (.leaf 19228043189)) (.fork 19439258983 (.leaf 19331374357) (.leaf 19439258983))) (.fork 29300158061 (.fork 28978901333 (.leaf 21136657169) (.leaf 28978901333)) (.fork 30484058597 (.leaf 29300158061) (.fork 30669070499 (.leaf 30484058597) (.leaf 30669070499))))) (.fork 33408040409 (.fork 32007204599 (.fork 31644223771 (.leaf 31461857593) (.leaf 31644223771)) (.fork 32495050439 (.leaf 32007204599) (.leaf 32495050439))) (.fork 36954986039 (.fork 34056580247 (.leaf 33408040409) (.leaf 34056580247)) (.fork 37336172723 (.leaf 36954986039) (.fork 37471617041 (.leaf 37336172723) (.leaf 37471617041)))))) (.fork 65828680343 (.fork 46993534711 (.fork 40312992011 (.fork 40157962679 (.leaf 37974180617) (.leaf 40157962679)) (.fork 44969209403 (.leaf 40312992011) (.leaf 44969209403))) (.fork 54539981537 (.fork 54474006383 (.leaf 46993534711) (.leaf 54474006383)) (.fork 54806276153 (.leaf 54539981537) (.fork 64163997343 (.leaf 54806276153) (.leaf 64163997343))))) (.fork 100992864421 (.fork 95899577129 (.fork 91088953951 (.leaf 65828680343) (.leaf 91088953951)) (.fork 99498996827 (.leaf 95899577129) (.fork 100488630617 (.leaf 99498996827) (.leaf 100488630617)))) (.fork 163781405509 (.fork 161384492047 (.leaf 100992864421) (.leaf 161384492047)) (.fork 175609900747 (.leaf 163781405509) (.fork 234771653549 (.leaf 175609900747) (.leaf 234771653549)))))))))))
+theorem factorTree0272_sound : factorTree0272.Sound := ⟨⟨⟨⟨⟨⟨⟨⟨⟨primeFact2,primeFact3⟩,⟨primeFact5,primeFact7⟩⟩,⟨⟨primeFact11,primeFact13⟩,⟨primeFact17,⟨primeFact19,primeFact23⟩⟩⟩⟩,⟨⟨⟨primeFact29,primeFact31⟩,⟨primeFact37,primeFact41⟩⟩,⟨⟨primeFact43,primeFact47⟩,⟨primeFact53,⟨primeFact59,primeFact61⟩⟩⟩⟩⟩,⟨⟨⟨⟨primeFact67,primeFact71⟩,⟨primeFact73,primeFact79⟩⟩,⟨⟨primeFact83,primeFact89⟩,⟨primeFact97,⟨primeFact101,primeFact103⟩⟩⟩⟩,⟨⟨⟨primeFact107,primeFact109⟩,⟨primeFact113,primeFact127⟩⟩,⟨⟨primeFact131,primeFact137⟩,⟨primeFact149,⟨primeFact151,primeFact157⟩⟩⟩⟩⟩⟩,⟨⟨⟨⟨⟨primeFact163,primeFact167⟩,⟨primeFact173,primeFact179⟩⟩,⟨⟨primeFact191,primeFact193⟩,⟨primeFact197,⟨primeFact199,primeFact211⟩⟩⟩⟩,⟨⟨⟨primeFact223,primeFact229⟩,⟨primeFact239,primeFact251⟩⟩,⟨⟨primeFact257,primeFact263⟩,⟨primeFact269,⟨primeFact271,primeFact283⟩⟩⟩⟩⟩,⟨⟨⟨⟨primeFact311,primeFact313⟩,⟨primeFact317,primeFact331⟩⟩,⟨⟨primeFact337,primeFact347⟩,⟨primeFact353,⟨primeFact373,primeFact379⟩⟩⟩⟩,⟨⟨⟨primeFact389,primeFact401⟩,⟨primeFact419,primeFact421⟩⟩,⟨⟨primeFact431,primeFact439⟩,⟨primeFact449,⟨primeFact463,primeFact467⟩⟩⟩⟩⟩⟩⟩,⟨⟨⟨⟨⟨⟨primeFact491,primeFact499⟩,⟨primeFact503,primeFact509⟩⟩,⟨⟨primeFact523,primeFact557⟩,⟨primeFact563,⟨primeFact571,primeFact577⟩⟩⟩⟩,⟨⟨⟨primeFact587,primeFact593⟩,⟨primeFact643,primeFact661⟩⟩,⟨⟨primeFact677,primeFact727⟩,⟨primeFact797,⟨primeFact809,primeFact811⟩⟩⟩⟩⟩,⟨⟨⟨⟨primeFact827,primeFact853⟩,⟨primeFact907,primeFact911⟩⟩,⟨⟨primeFact929,primeFact983⟩,⟨primeFact997,⟨primeFact1021,primeFact1051⟩⟩⟩⟩,⟨⟨⟨primeFact1093,primeFact1109⟩,⟨primeFact1171,primeFact1181⟩⟩,⟨⟨primeFact1193,primeFact1213⟩,⟨primeFact1217,⟨primeFact1231,primeFact1237⟩⟩⟩⟩⟩⟩,⟨⟨⟨⟨⟨primeFact1259,primeFact1277⟩,⟨primeFact1289,primeFact1307⟩⟩,⟨⟨primeFact1373,primeFact1381⟩,⟨primeFact1399,⟨primeFact1499,primeFact1511⟩⟩⟩⟩,⟨⟨⟨primeFact1523,primeFact1571⟩,⟨primeFact1583,primeFact1597⟩⟩,⟨⟨primeFact1601,primeFact1607⟩,⟨primeFact1609,⟨primeFact1619,primeFact1627⟩⟩⟩⟩⟩,⟨⟨⟨⟨primeFact1871,primeFact1877⟩,⟨primeFact1879,primeFact1933⟩⟩,⟨⟨primeFact1949,primeFact1973⟩,⟨primeFact1997,⟨primeFact2237,primeFact2281⟩⟩⟩⟩,⟨⟨⟨primeFact2287,primeFact2309⟩,⟨primeFact2333,⟨primeFact2339,primeFact2341⟩⟩⟩,⟨⟨primeFact2531,primeFact2789⟩,⟨primeFact2819,⟨primeFact2833,primeFact2837⟩⟩⟩⟩⟩⟩⟩⟩,⟨⟨⟨⟨⟨⟨⟨primeFact2861,primeFact2927⟩,⟨primeFact2939,primeFact2971⟩⟩,⟨⟨primeFact3037,primeFact3119⟩,⟨primeFact3187,⟨primeFact3209,primeFact3257⟩⟩⟩⟩,⟨⟨⟨primeFact3331,primeFact3343⟩,⟨primeFact3373,primeFact3407⟩⟩,⟨⟨primeFact3517,primeFact3769⟩,⟨primeFact4241,⟨primeFact4483,primeFact4547⟩⟩⟩⟩⟩,⟨⟨⟨⟨primeFact4651,primeFact4657⟩,⟨primeFact4663,primeFact4691⟩⟩,⟨⟨primeFact5167,primeFact5197⟩,⟨primeFact5281,⟨primeFact5441,primeFact5741⟩⟩⟩⟩,⟨⟨⟨primeFact5779,primeFact5927⟩,⟨primeFact6037,primeFact6121⟩⟩,⟨⟨primeFact6311,primeFact6367⟩,⟨primeFact6397,⟨primeFact6553,primeFact6619⟩⟩⟩⟩⟩⟩,⟨⟨⟨⟨⟨primeFact6841,primeFact7187⟩,⟨primeFact7331,primeFact7549⟩⟩,⟨⟨primeFact7703,primeFact7741⟩,⟨primeFact7951,⟨primeFact8329,primeFact8779⟩⟩⟩⟩,⟨⟨⟨primeFact8807,primeFact9241⟩,⟨primeFact9463,primeFact9533⟩⟩,⟨⟨primeFact9811,primeFact9833⟩,⟨primeFact9839,⟨primeFact9901,primeFact9973⟩⟩⟩⟩⟩,⟨⟨⟨⟨primeFact10301,primeFact10781⟩,⟨primeFact11173,primeFact11317⟩⟩,⟨⟨primeFact11329,primeFact11549⟩,⟨primeFact12073,⟨primeFact12487,primeFact12959⟩⟩⟩⟩,⟨⟨⟨primeFact13217,primeFact13297⟩,⟨primeFact14563,⟨primeFact15809,primeFact17033⟩⟩⟩,⟨⟨primeFact18169,primeFact18413⟩,⟨primeFact18713,⟨primeFact19843,primeFact20407⟩⟩⟩⟩⟩⟩⟩,⟨⟨⟨⟨⟨⟨primeFact20857,primeFact22441⟩,⟨primeFact23459,primeFact24107⟩⟩,⟨⟨primeFact24373,primeFact25169⟩,⟨primeFact25409,⟨primeFact26729,primeFact26953⟩⟩⟩⟩,⟨⟨⟨primeFact27583,primeFact30029⟩,⟨primeFact31177,primeFact32299⟩⟩,⟨⟨primeFact36343,primeFact36973⟩,⟨primeFact38273,⟨primeFact39397,primeFact45697⟩⟩⟩⟩⟩,⟨⟨⟨⟨primeFact46061,primeFact47317⟩,⟨primeFact52433,primeFact52709⟩⟩,⟨⟨primeFact53617,primeFact54539⟩,⟨primeFact56597,⟨primeFact57601,primeFact57923⟩⟩⟩⟩,⟨⟨⟨primeFact58391,primeFact60139⟩,⟨primeFact60509,primeFact60631⟩⟩,⟨⟨primeFact61051,primeFact61547⟩,⟨primeFact62213,⟨primeFact69061,primeFact70627⟩⟩⟩⟩⟩⟩,⟨⟨⟨⟨⟨primeFact72421,primeFact75707⟩,⟨primeFact79111,primeFact81181⟩⟩,⟨⟨primeFact87107,primeFact92251⟩,⟨primeFact95989,⟨primeFact96671,primeFact97373⟩⟩⟩⟩,⟨⟨⟨primeFact98573,primeFact98929⟩,⟨primeFact99289,primeFact99371⟩⟩,⟨⟨primeFact101279,primeFact101917⟩,⟨primeFact108421,⟨primeFact111049,primeFact111593⟩⟩⟩⟩⟩,⟨⟨⟨⟨primeFact112621,primeFact120677⟩,⟨primeFact127301,primeFact135637⟩⟩,⟨⟨primeFact140863,primeFact143981⟩,⟨primeFact147557,⟨primeFact156269,primeFact158071⟩⟩⟩⟩,⟨⟨⟨primeFact160861,primeFact161717⟩,⟨primeFact164387,⟨primeFact165293,primeFact166247⟩⟩⟩,⟨⟨primeFact178361,primeFact180871⟩,⟨primeFact186451,⟨primeFact191047,primeFact192749⟩⟩⟩⟩⟩⟩⟩⟩⟩,⟨⟨⟨⟨⟨⟨⟨⟨primeFact207301,primeFact215309⟩,⟨primeFact221941,primeFact223283⟩⟩,⟨⟨primeFact226381,primeFact227501⟩,⟨primeFact227663,⟨primeFact228901,primeFact229343⟩⟩⟩⟩,⟨⟨⟨primeFact229981,primeFact235811⟩,⟨primeFact261301,primeFact272263⟩⟩,⟨⟨primeFact286777,primeFact291547⟩,⟨primeFact301487,⟨primeFact305471,primeFact313583⟩⟩⟩⟩⟩,⟨⟨⟨⟨primeFact332317,primeFact340073⟩,⟨primeFact340267,primeFact346891⟩⟩,⟨⟨primeFact351053,primeFact355643⟩,⟨primeFact372263,⟨primeFact381347,primeFact386569⟩⟩⟩⟩,⟨⟨⟨primeFact395491,primeFact428503⟩,⟨primeFact432023,primeFact453023⟩⟩,⟨⟨primeFact462589,primeFact491329⟩,⟨primeFact493813,⟨primeFact495457,primeFact501637⟩⟩⟩⟩⟩⟩,⟨⟨⟨⟨⟨primeFact505051,primeFact525353⟩,⟨primeFact556273,primeFact587969⟩⟩,⟨⟨primeFact611393,primeFact630901⟩,⟨primeFact646423,⟨primeFact653363,primeFact657617⟩⟩⟩⟩,⟨⟨⟨primeFact689131,primeFact752413⟩,⟨primeFact777421,primeFact805531⟩⟩,⟨⟨primeFact808081,primeFact837113⟩,⟨primeFact838769,⟨primeFact912367,primeFact960383⟩⟩⟩⟩⟩,⟨⟨⟨⟨primeFact976777,primeFact1042897⟩,⟨primeFact1065527,primeFact1087301⟩⟩,⟨⟨primeFact1092733,primeFact1112131⟩,⟨primeFact1142233,⟨primeFact1314133,primeFact1356947⟩⟩⟩⟩,⟨⟨⟨primeFact1443727,primeFact1454021⟩,⟨primeFact1471693,⟨primeFact1474717,primeFact1504579⟩⟩⟩,⟨⟨primeFact1630117,primeFact1702903⟩,⟨primeFact1816261,⟨primeFact1914641,primeFact1956047⟩⟩⟩⟩⟩⟩⟩,⟨⟨⟨⟨⟨⟨primeFact2093489,primeFact2232677⟩,⟨primeFact2362273,primeFact2581211⟩⟩,⟨⟨primeFact2630099,primeFact2791843⟩,⟨primeFact2876777,⟨primeFact3054769,primeFact3345409⟩⟩⟩⟩,⟨⟨⟨primeFact3358141,primeFact3379877⟩,⟨primeFact3424651,primeFact3443239⟩⟩,⟨⟨primeFact3497623,primeFact3525391⟩,⟨primeFact3529951,⟨primeFact3992447,primeFact4184303⟩⟩⟩⟩⟩,⟨⟨⟨⟨primeFact4292887,primeFact4496963⟩,⟨primeFact4567333,primeFact4942183⟩⟩,⟨⟨primeFact5214191,primeFact5466067⟩,⟨primeFact5491727,⟨primeFact5904161,primeFact6172927⟩⟩⟩⟩,⟨⟨⟨primeFact6534709,primeFact6588199⟩,⟨primeFact6595579,primeFact7080077⟩⟩,⟨⟨primeFact7623529,primeFact7735081⟩,⟨primeFact7801907,⟨primeFact8206117,primeFact8492831⟩⟩⟩⟩⟩⟩,⟨⟨⟨⟨⟨primeFact8515867,primeFact8772553⟩,⟨primeFact8832149,primeFact9186427⟩⟩,⟨⟨primeFact9313259,primeFact9472523⟩,⟨primeFact9741829,⟨primeFact9993317,primeFact10144333⟩⟩⟩⟩,⟨⟨⟨primeFact10145197,primeFact10164667⟩,⟨primeFact10422331,primeFact10453741⟩⟩,⟨⟨primeFact10656353,primeFact11252779⟩,⟨primeFact11475509,⟨primeFact13814611,primeFact14647621⟩⟩⟩⟩⟩,⟨⟨⟨⟨primeFact15085621,primeFact15252691⟩,⟨primeFact15674597,primeFact16907327⟩⟩,⟨⟨primeFact17490631,primeFact17563187⟩,⟨primeFact17680921,⟨primeFact19662287,primeFact19747913⟩⟩⟩⟩,⟨⟨⟨primeFact20239399,primeFact20641073⟩,⟨primeFact22887209,⟨primeFact23079019,primeFact23477197⟩⟩⟩,⟨⟨primeFact24153323,primeFact25865017⟩,⟨primeFact28930049,⟨primeFact29880419,primeFact30023347⟩⟩⟩⟩⟩⟩⟩⟩,⟨⟨⟨⟨⟨⟨⟨primeFact30591137,primeFact31105463⟩,⟨primeFact31348579,primeFact31380757⟩⟩,⟨⟨primeFact31556923,primeFact33350021⟩,⟨primeFact33396631,⟨primeFact37885033,primeFact43312813⟩⟩⟩⟩,⟨⟨⟨primeFact43353203,primeFact44696549⟩,⟨primeFact48289169,primeFact54563879⟩⟩,⟨⟨primeFact57991223,primeFact63148661⟩,⟨primeFact68960659,⟨primeFact73331651,primeFact85198559⟩⟩⟩⟩⟩,⟨⟨⟨⟨primeFact100716809,primeFact103117213⟩,⟨primeFact106476883,primeFact115523831⟩⟩,⟨⟨primeFact124134217,primeFact125039581⟩,⟨primeFact133405163,⟨primeFact155789617,primeFact156207523⟩⟩⟩⟩,⟨⟨⟨primeFact172917851,primeFact186716333⟩,⟨primeFact217865261,primeFact220709609⟩⟩,⟨⟨primeFact241388617,primeFact242173433⟩,⟨primeFact242718919,⟨primeFact256802599,primeFact308134987⟩⟩⟩⟩⟩⟩,⟨⟨⟨⟨⟨primeFact310182823,primeFact340907969⟩,⟨primeFact352897529,primeFact367461827⟩⟩,⟨⟨primeFact372413287,primeFact395184817⟩,⟨primeFact410799491,⟨primeFact417202043,primeFact418152143⟩⟩⟩⟩,⟨⟨⟨primeFact430148483,primeFact437704489⟩,⟨primeFact453268483,primeFact482344271⟩⟩,⟨⟨primeFact525389933,primeFact540390517⟩,⟨primeFact552731833,⟨primeFact570706699,primeFact584011951⟩⟩⟩⟩⟩,⟨⟨⟨⟨primeFact605461721,primeFact608618771⟩,⟨primeFact678027661,primeFact749629109⟩⟩,⟨⟨primeFact762711161,primeFact799135999⟩,⟨primeFact1015186831,⟨primeFact1051155331,primeFact1063256153⟩⟩⟩⟩,⟨⟨⟨primeFact1149277427,primeFact1166779787⟩,⟨primeFact1169916563,⟨primeFact1325782091,primeFact1471579969⟩⟩⟩,⟨⟨primeFact1644257539,primeFact1767957913⟩,⟨primeFact1921944769,⟨primeFact1977754699,primeFact2082177869⟩⟩⟩⟩⟩⟩⟩,⟨⟨⟨⟨⟨⟨primeFact2182331453,primeFact2303421157⟩,⟨primeFact2371286501,primeFact2403102157⟩⟩,⟨⟨primeFact2566925423,primeFact2576530097⟩,⟨primeFact2735656307,⟨primeFact2757197537,primeFact2837896771⟩⟩⟩⟩,⟨⟨⟨primeFact3112435853,primeFact3222345233⟩,⟨primeFact3398746367,primeFact3792969217⟩⟩,⟨⟨primeFact4059627449,primeFact4213878913⟩,⟨primeFact4304420377,⟨primeFact5256870121,primeFact5873266463⟩⟩⟩⟩⟩,⟨⟨⟨⟨primeFact6022390813,primeFact6024331639⟩,⟨primeFact6438305017,primeFact7072429537⟩⟩,⟨⟨primeFact8008804267,primeFact8915162471⟩,⟨primeFact9055310543,⟨primeFact9137383933,primeFact9146473547⟩⟩⟩⟩,⟨⟨⟨primeFact9710253379,primeFact10870299673⟩,⟨primeFact12955122839,primeFact13415942923⟩⟩,⟨⟨primeFact14244299933,primeFact14318576917⟩,⟨primeFact14784357397,⟨primeFact15692679347,primeFact18560107523⟩⟩⟩⟩⟩⟩,⟨⟨⟨⟨⟨primeFact19070838547,primeFact19228043189⟩,⟨primeFact19331374357,primeFact19439258983⟩⟩,⟨⟨primeFact21136657169,primeFact28978901333⟩,⟨primeFact29300158061,⟨primeFact30484058597,primeFact30669070499⟩⟩⟩⟩,⟨⟨⟨primeFact31461857593,primeFact31644223771⟩,⟨primeFact32007204599,primeFact32495050439⟩⟩,⟨⟨primeFact33408040409,primeFact34056580247⟩,⟨primeFact36954986039,⟨primeFact37336172723,primeFact37471617041⟩⟩⟩⟩⟩,⟨⟨⟨⟨primeFact37974180617,primeFact40157962679⟩,⟨primeFact40312992011,primeFact44969209403⟩⟩,⟨⟨primeFact46993534711,primeFact54474006383⟩,⟨primeFact54539981537,⟨primeFact54806276153,primeFact64163997343⟩⟩⟩⟩,⟨⟨⟨primeFact65828680343,primeFact91088953951⟩,⟨primeFact95899577129,⟨primeFact99498996827,primeFact100488630617⟩⟩⟩,⟨⟨primeFact100992864421,primeFact161384492047⟩,⟨primeFact163781405509,⟨primeFact175609900747,primeFact234771653549⟩⟩⟩⟩⟩⟩⟩⟩⟩⟩
+def primes0272 : Nat → Bool := factorTree0272.has
+theorem primes0272_sound (n : Nat) (h : primes0272 n = true) : n.Prime :=
+  ExpSix.PrimeTree.prime_of_has factorTree0272 factorTree0272_sound n h
+
+end ExpSix.Generated

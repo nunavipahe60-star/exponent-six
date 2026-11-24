@@ -47,6 +47,69 @@ private theorem undo_div {k : ℕ} (n : ℕ) (h : 0 < k) :
     (k * n) / k = n := by
   exact Nat.mul_div_cancel_left n h
 
+/-- The two trace bounds give an upper bound on the large complementary divisor. -/
+def upperRootAux (n : ℕ) : ℕ → ℕ → ℕ
+  | 0, g => g
+  | fuel+1, g =>
+    let m := (g+n/g)/2
+    if m < g ∧ n < (m+1)*(m+1) then upperRootAux n fuel m else g
+
+/-- Each Newton step independently verifies its proposed upper bound.
+    Exhausting fuel only widens the search interval. -/
+def upperRoot (n : ℕ) : ℕ :=
+  if n < (2^48+1)*(2^48+1) then upperRootAux n 64 (2^48)
+  else upperRootAux n 128 n
+
+private theorem upperRootAux_spec {n g : ℕ} (fuel : ℕ) (h : n < (g+1)*(g+1)) :
+    n.sqrt ≤ upperRootAux n fuel g := by
+  induction fuel generalizing g with
+  | zero => exact Nat.le_of_lt_succ (Nat.sqrt_lt.mpr h)
+  | succ f ih =>
+    simp only [upperRootAux]
+    split
+    · rename_i hm
+      exact ih hm.2
+    · exact Nat.le_of_lt_succ (Nat.sqrt_lt.mpr h)
+
+theorem upperRoot_spec (n : ℕ) : n.sqrt ≤ upperRoot n := by
+  unfold upperRoot
+  split
+  · exact upperRootAux_spec _ (by assumption)
+  · apply upperRootAux_spec
+    nlinarith only [Nat.zero_le (n*n), Nat.zero_le n]
+
+/-- The two trace bounds give an upper bound on the large complementary divisor. -/
+def maxPartner (lower p r y v : ℕ) : ℕ :=
+  v * upperRoot (4*p^6 - lower*y^2) + y * upperRoot (4*r^6 - lower*v^2)
+
+theorem candidate_bounds {lower p r y v a b : ℕ} {c : Candidate}
+    (h : candidate? lower p r y v a b = some c) : a < b ∧ b ≤ maxPartner lower p r y v := by
+  let X := leftNum p r y v a b / (2*v)
+  let U := rightNum p r y v a b / (2*y)
+  let D := (4*p^6 - X^2) / y^2
+  unfold candidate? at h
+  dsimp only at h
+  split at h
+  · rename_i ht
+    obtain ⟨_,hab,_,_,_,_,hl,_,_,hx,hu,hp,hr⟩ := ht
+    change lower ≤ D at hl
+    change 2*v*X = leftNum p r y v a b at hx
+    change 2*y*U = rightNum p r y v a b at hu
+    change X^2 + D*y^2 = 4*p^6 at hp
+    change U^2 + D*v^2 = 4*r^6 at hr
+    have hxBound : X ≤ Nat.sqrt (4*p^6 - lower*y^2) := Nat.le_sqrt'.mpr (by
+      have := Nat.mul_le_mul_right (y^2) hl
+      omega)
+    have huBound : U ≤ Nat.sqrt (4*r^6 - lower*v^2) := Nat.le_sqrt'.mpr (by
+      have := Nat.mul_le_mul_right (v^2) hl
+      omega)
+    have heq : b = v*X + y*U := by
+      simp only [leftNum, rightNum, Nat.mul_assoc] at hx hu
+      split at hx <;> simp_all only [↓reduceIte] <;> omega
+    exact ⟨hab, heq ▸ Nat.add_le_add (Nat.mul_le_mul_left v (hxBound.trans (upperRoot_spec _)))
+      (Nat.mul_le_mul_left y (huBound.trans (upperRoot_spec _)))⟩
+  · cases h
+
 theorem candidate_complete {lower p r y v a b x u d : ℕ}
     (ha : 0 < a) (hab : a < b) (hy : 0 < y) (hv : 0 < v)
     (hx : 0 < x) (hu : 0 < u) (hlow : lower ≤ d)

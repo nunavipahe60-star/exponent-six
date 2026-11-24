@@ -88,39 +88,17 @@ if [[ $RUN_LEAN -eq 1 ]]; then
     lake build
   ) || fail "lake build"
 
-  step "6. Axiom report (allowed: propext, Classical.choice, Quot.sound)"
-  AX="lean/.verify_axioms.lean"
-  $PY - <<'EOF' > "$AX"
-import glob, re
-lines = ["import ExpSix"]
-for path in sorted(glob.glob("lean/ExpSix/**/*.lean", recursive=True)):
-    ns = []
-    for raw in open(path, encoding="utf-8"):
-        line = raw.strip()
-        m_ns = re.match(r"^namespace\s+([A-Za-z0-9_.']+)", line)
-        if m_ns:
-            parts = m_ns.group(1).split(".")
-            ns.append(parts)
-            continue
-        m_end = re.match(r"^end\s+([A-Za-z0-9_.']+)", line)
-        if m_end and ns:
-            ns.pop()
-            continue
-        m_thm = re.match(r"^(?:public\s+)?(?:theorem|lemma)\s+([A-Za-z0-9_']+)", line)
-        if m_thm:
-            prefix = ".".join(p for grp in ns for p in grp)
-            full = f"{prefix}.{m_thm.group(1)}" if prefix else m_thm.group(1)
-            lines.append(f"#print axioms {full}")
-print("\n".join(lines))
-EOF
-  N=$(grep -c '^#print axioms' "$AX")
-  OUT=$(cd lean && lake env lean .verify_axioms.lean 2>&1) || { rm -f "$AX"; echo "$OUT"; fail "axiom report did not elaborate"; }
-  rm -f "$AX"
-  echo "$OUT" | grep -qE 'sorryAx|ofReduceBool|ofReduceNat|trustCompiler' && { echo "$OUT"; fail "forbidden axiom"; }
-  EXTRA=$(echo "$OUT" | grep -oE '\[[^]]*\]' | tr -d '[] ' | tr ',' '\n' \
-          | grep -vE '^(propext|Classical\.choice|Quot\.sound)?$' | sort -u || true)
-  [[ -n "$EXTRA" ]] && { echo "$OUT"; fail "unexpected axioms: $EXTRA"; }
-  echo "ok: $N theorems checked, standard axioms only"
+  step "6. Axiom report for the default public ExpSix import graph"
+  # Production manifests are audited by lean/tools/build_kernel_chunks.py.
+  (
+    cd lean
+    log=.lake/public-axioms.log
+    if ! lake env lean -DwarningAsError=true tools/AuditPublic.lean >"$log" 2>&1; then
+      cat "$log" >&2
+      exit 1
+    fi
+    tail -n 1 "$log"
+  ) || fail "public axiom audit"
 fi
 
 printf '\nALL CHECKS PASSED\n'

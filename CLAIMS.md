@@ -22,7 +22,7 @@ Reviewer roles: **R1** (independent analytic, sieve & audit reviewer) · **R2** 
 
 | ID | Claim | Status | Owner / reviewer | Commit | Evidence | Depends on |
 |---|---|---|---|---|---|---|
-| A0 | Self-contained large-discriminant cutoff removing E2: under GRH, d ≥ e¹⁰⁰ gives a split prime p ≤ (log d)⁴ via LLS at y = 4 and elementary Chebyshev bounds, ruling out d ≥ 10⁶⁰ for exp ∣ 6; two prefix certificate rows at X = 28000, 6800 reduce 10⁶⁰ to 3.9303e23 < 2.5e25 | verified (R3); open for R1 diff-review | R2 / R3, R1 | HEAD | `self_contained_tail.md`, `split_bound_certificate.py`, `split_bound_certificate.txt` | E5, A1 |
+| A0 | Self-contained large-discriminant cutoff removing E2: under GRH, d ≥ e¹⁰⁰ gives a split prime p ≤ (log d)⁴ via LLS at y = 4 and elementary Chebyshev bounds, ruling out d ≥ 10⁶⁰ for exp ∣ 6; two prefix certificate rows at X = 28000, 6800 reduce 10⁶⁰ to 3.9303e23 < 2.5e25 | verified | R2 / R3, R1 | 0b2059e | `self_contained_tail.md`, `split_bound_certificate.py`, `split_bound_certificate.txt` | E5, A1 |
 | A1 | The odd-character explicit formulas (LLS 2.7 and 2.8) hold with the stated Ẽ₁(X) and E₁(y), with the sign correction. They use ξ(s) = ξ(1−s) and Σ1/\|ρ\|² = 2B | verified | R2 / R1 | 9a2d464 | `split_bound_proof.md`; `Classification_Proof.tex` §3; R1's independent residue derivation | E5 |
 | A2 | The first-order certificate gives p₁ ≤ 3697 and p₂ ≤ 3719 for d ∈ [3.1e20, 2.5e25] (and from 10⁶⁰ via A0) | verified (mech for the numbers) | R2 / R1 | HEAD | `split_bound_certificate.py`, `.txt`; R1's float re-implementation; also passes with γ ∈ [0.577, 0.578] and π > 3.14 | A1, E2 or A0 |
 | A3 | The positive-kernel (Guinand–Weil) certificate gives two split primes in [2069, 3373] | verified (mech for the numbers) | R2 / R1 | c6bd725 | `positive_kernel_proof.md`, `positive_kernel_verify.py`, `positive_kernel_certificate.txt` | E5, E2 or A0 |
@@ -31,7 +31,7 @@ Reviewer roles: **R1** (independent analytic, sieve & audit reviewer) · **R2** 
 
 | ID | Claim | Status | Owner / reviewer | Commit | Evidence | Depends on |
 |---|---|---|---|---|---|---|
-| B1 | If exp ∣ 6 and p splits, then 4p⁶ = x² + d·y² with y ≥ 1 and p ∤ x (for odd p) | verified (paper); open (Lean) | R2 / R1 | 9a2d464 | `Classification_Proof.tex` §1, `sieve_readme.md`; Lean carries it as `FieldData` / `NormWitness` | — |
+| B1 | If exp ∣ 6 and p splits, then 4p⁶ = x² + d·y² with y ≥ 1 and p ∤ x, producing `FieldData` at the least split prime (`[IsDedekindDomain (QuadraticAlgebra ℤ a b)]` carried as an explicit typeclass hypothesis) | verified (paper & Lean, mech) | R1 / R3 | acd70a1 | `Classification_Proof.tex` §1; `lean/ExpSix/FieldBridge.lean` (`normWitness_of_exp_dvd_six`, `fieldData_of_least`) | — |
 | B2 | Every split prime of a field in the gap is ≥ 2069 | verified (Lean, mech) | R1 / R3 | cd60839 | `Reduction.lean: split_prime_ge` | B1 |
 | B3 | At an odd non-split q, x² − 4p⁶ is not a nonzero square mod q. The case q ∣ y is kept | verified (Lean, mech) | R1 / R3 | cd60839 | `Reduction.lean: legendre_trace_ne_one` | B1 |
 
@@ -60,9 +60,9 @@ Reviewer roles: **R1** (independent analytic, sieve & audit reviewer) · **R2** 
 | P3 | The degenerate case vp³ = yr³ never occurs | verified (Lean, mech) | R3, R2 / R1 | cd60839 | `no_degenerate_pair_shape`, `prime_cube_scales_ne` | P2 |
 | P4 | Divisor window and signed trace reconstruction | verified (Lean, mech) | R3, R2 / R1 | HEAD | `divisor_window_bounds`, `oriented_factors`, `norm_witnesses_pair` | P1, P3 |
 | P5 | There are 52,092 outer tuples (p, r, y, v) for p < r ≤ 3373, and 135,310 under the wider bounds | verified (mech) | R2 / R1 | cd60839 | `verify.sh` step 4 recomputes both | P2, A3 or A2 |
-| P5a | Per-shape certified divisor completeness (`FactorCertificate`, `PairCertificate`, `PairBridge`, `PairExample`) and external 52,092-row factor certificate (`factors.txt`, 0 survivors) | verified (R3, mech); open for R1 diff-review | R2 / R3, R1 | HEAD | `lean/ExpSix/{FactorCertificate,PairCertificate,PairBridge,PairExample}.lean`, `lean/tools/pair_certificate.py`, `lean/certificates/factors.txt` | P1–P5 |
-| P6 | **In-Lean tuple generation & Pratt-certified factorizations across all 52,092 (or 135,310) outer tuples** | **open** | R2 / R1 | — | replace `Finset` trial-division check with duplicate-free `List` expansion + Pratt primality witnesses + in-Lean shape enumeration | P1–P5a |
-| P7 | **In-Lean chunked Bool checker with explicit QR witnesses (ℓ, s) and soundness proof (standard axioms only, no `native_decide`)** | **open** | R2 / R1 | — | per-chunk kernel evaluation discharging all divisor pairs | P6, B3 |
+| P5a | Per-shape certified divisor completeness (`FactorCertificate`, `PairCertificate`, `PairBridge`, `PairExample`) and external 52,092-row factor certificate (`factors.txt`, 0 survivors) | verified (mech) | R2 / R3, R1 | 0b2059e | `lean/ExpSix/{FactorCertificate,PairCertificate,PairBridge,PairExample}.lean`, `lean/tools/pair_certificate.py`, `lean/certificates/factors.txt` | P1–P5 |
+| P6 | **In-Lean tuple generation & Pratt-certified factorizations across all 52,092 (or 135,310) outer tuples** | **tight kernel-verified (52,092)** | R2 / R1 | `lean/certificates/tight_kernel_run.json` | replace `Finset` trial-division check with duplicate-free `List` expansion + Pratt primality witnesses + in-Lean shape enumeration | P1–P5a |
+| P7 | **In-Lean finite exclusion with certified nonzero quadratic residues and standard axioms** | **tight kernel-verified (52,092)** | R2 / R1 | `lean/certificates/tight_kernel_run.json` | per-chunk kernel evaluation discharging all divisor pairs | P6, B3 |
 
 ## Change log (claims reopened)
 

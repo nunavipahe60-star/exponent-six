@@ -19,8 +19,10 @@ See certificates/verification.md and pair_certificate.py for the norm bounds.
 
 import argparse
 from itertools import islice, zip_longest
+from itertools import groupby
 from math import gcd, isqrt
 from pathlib import Path
+import re
 from tempfile import TemporaryDirectory
 
 import pair_certificate as base
@@ -428,6 +430,283 @@ def emit(data, dest, part_size, prove, limit, module_prefix, window):
     print(f"emitted {count} shape rows, {len(ordered)} Pratt rows, "
           f"{len(module_names)} shape modules and {len(pratt_names)} Pratt modules")
 
+def tight_proof_index(directory, prefix, common):
+    """Read exported constants only. The broad build imports and checks their Lean types."""
+    primes, pairs = {}, {}
+    if f"namespace {prefix}\n" not in (directory / "Manifest.lean").read_text(encoding="utf-8"):
+        raise ValueError(f"tight module prefix does not match {directory}")
+    key_re = re.compile(r"^theorem verified(\d+)_(\d+) : .*" + re.escape(common) + r" s :=$", re.M)
+    for shard in sorted(directory.glob("Pratt*.lean")):
+        for q in re.findall(r"^theorem primeFact(\d+) : Nat\.Prime \d+ :=", shard.read_text(encoding="utf-8"), re.M):
+            if int(q) in primes:
+                raise ValueError(f"ambiguous tight prime proof {q}")
+            primes[int(q)] = f"{prefix}.{shard.stem}"
+    for shard in sorted(directory.glob("Rows*.lean")):
+        for p, r in key_re.findall(shard.read_text(encoding="utf-8")):
+            pair = (int(p), int(r))
+            if pair in pairs:
+                raise ValueError(f"ambiguous tight pair proof {pair}")
+            pairs[pair] = f"{prefix}.{shard.stem}"
+    if not primes or pairs.keys() != {s[:2] for s in base.shapes(TIGHT)}:
+        raise ValueError("missing tight Pratt facts or incompatible tight pair coverage")
+    return primes, pairs
+
+
+def emit_production(data, dest, rows_per_shard, pratt_per_shard, prefix, window, limit_pairs=None,
+                    first_requested_pair=None, pratt_only=False, root_masks=False, reuse_tight=None):
+    """Emit independently buildable row shards and opaque pair/prime coverage proofs."""
+    from pratt_shards import write_factor_table, write_pratt
+
+    if min(rows_per_shard, pratt_per_shard) < 1 or (limit_pairs is not None and limit_pairs < 1):
+        raise ValueError("shard sizes and pair limit must be positive")
+    if first_requested_pair and limit_pairs is None:
+        raise ValueError("--start-pair requires --limit-pairs")
+    if not all(part.isascii() and part.isidentifier() for part in prefix.split(".")):
+        raise ValueError("invalid Lean module prefix")
+    bounds, expected_rows = WINDOWS[window]
+    dest.mkdir(parents=True, exist_ok=True)
+
+    def write(name, lines):
+        # A restart reuses complete, byte-identical modules. A different window,
+        # shard layout or generator revision must use a fresh destination.
+        target = dest / (name + ".lean")
+        contents = ("\n".join(lines) + "\n").encode("utf-8")
+        if target.exists():
+            if target.read_bytes() != contents:
+                raise ValueError(f"conflicting source at {target}; use a fresh destination")
+            return
+        with TemporaryDirectory(dir=dest) as temp:
+            staged = Path(temp) / target.name
+            staged.write_bytes(contents)
+            staged.replace(target)
+
+    def header(imports, private_imports=()):
+        return ["module", "", *(f"public import {name}" for name in imports),
+                *(f"import {name}" for name in private_imports), "",
+                "@[expose] public section", "", f"namespace {prefix}", "",
+                "set_option maxRecDepth 100000", "set_option maxHeartbeats 0", ""]
+
+    end = ["", f"end {prefix}"]
+    common = ("ExpSix.P7.ShapeExcluded" if root_masks else
+              "ExpSix.P7.HasCheckedRow (fun n => decide n.Prime)")
+    external_primes, external_pairs = {}, {}
+    if reuse_tight:
+        tight_dir, tight_prefix = Path(reuse_tight[0]), reuse_tight[1]
+        if window != "broad" or tight_dir.resolve() == dest.resolve() or tight_prefix == prefix:
+            raise ValueError("the incremental broad window needs a distinct directory and module prefix")
+        if not all(part.isascii() and part.isidentifier() for part in tight_prefix.split(".")):
+            raise ValueError("invalid tight module prefix")
+        external_primes, external_pairs = tight_proof_index(tight_dir, tight_prefix, common)
+
+    def groups():
+        selected = (row for row in iter_data(data) if row[0][0] <= bounds[2] and row[0][1] < bounds[3])
+        shapes = base.shapes(bounds)
+        if first_requested_pair:
+            start = tuple(first_requested_pair)
+            selected = (row for row in selected if row[0][:2] >= start)
+            shapes = (shape for shape in shapes if shape[:2] >= start)
+        actual = groupby(selected, key=lambda row: row[0][:2])
+        canonical = groupby(shapes, key=lambda shape: shape[:2])
+        pairs = zip_longest(actual, canonical)
+        if limit_pairs is not None:
+            pairs = islice(pairs, limit_pairs)
+        for found, wanted in pairs:
+            if found is None or wanted is None or found[0] != wanted[0]:
+                raise ValueError(f"unexpected or missing pair, expected {wanted and wanted[0]}")
+            pair, records = found
+            rows = list(records)
+            if [record[0] for record in rows] != list(wanted[1]):
+                raise ValueError(f"missing or reordered coordinates for prime pair {pair}")
+            yield pair, rows
+
+    dag = {p: (a, fs) for p, a, fs in parse_dag(data / "pratt.txt")}
+    required = set()
+    pair_count = shape_count = 0
+    for pair, rows in groups():
+        if pair_count == 0 and first_requested_pair and pair != tuple(first_requested_pair):
+            raise ValueError(f"requested start pair {first_requested_pair} is not in this window")
+        if pair not in external_pairs:
+            required.update(q for _, factors, _ in rows for q, _ in factors if q not in external_primes)
+        pair_count += 1
+        shape_count += len(rows)
+    if not pair_count or (limit_pairs is None and shape_count != expected_rows):
+        raise ValueError(f"incomplete window: {shape_count} shapes and {pair_count} prime pairs")
+    if limit_pairs is not None and pair_count != limit_pairs:
+        raise ValueError(f"expected {limit_pairs} pairs, found {pair_count}")
+
+    # A broad raw DAG may also feed a tight run. Use just the factor bases
+    # referenced by the selected rows and their Pratt predecessors.
+    pending = list(required)
+    while pending:
+        p = pending.pop()
+        if p not in dag:
+            raise ValueError(f"missing Pratt certificate for factor {p}")
+        for q, _ in dag[p][1]:
+            if q not in required and q not in external_primes:
+                required.add(q)
+                pending.append(q)
+    ordered = sorted(required)
+    prime_shards = {p: i // pratt_per_shard for i, p in enumerate(ordered)}
+    pratt_names = write_pratt(dag, ordered, pratt_per_shard, prefix, header, write, True,
+                              global_table=False, external=external_primes)
+    if pratt_only:
+        print(f"emitted {len(required)} required prime facts in {len(pratt_names)} Pratt shards")
+        return
+
+    def lit(items):
+        return "[" + ",".join(items) + "]"
+
+    def write_masks(p):
+        masks = []
+        for ell in base.primes_through(127):
+            if ell == 2 or ell >= p:
+                continue
+            squares = {s*s % ell for s in range(1, ell//2 + 1)}
+            norm = 4 * pow(p, 6, ell)
+            bits = sum(1 << x for x in range(ell) if (x*x - norm) % ell in squares)
+            if bits:
+                masks.append((ell, bits))
+        # Try the masks that reject the highest fraction of residues first.
+        masks.sort(key=lambda m: (-bin(m[1]).count("1") / m[0], m[0]))
+        ls = header(["ExpSix.TraceMask"])
+        ls += [f"noncomputable def localMasks{p} : List (Nat × Nat) := " +
+               lit(f"({ell},{hex(bits)})" for ell, bits in masks),
+               f"theorem localMasksValid{p} : ExpSix.PairSieve.traceMasksOK {p} localMasks{p} = true := by decide +kernel"]
+        write(f"Masks{p}", ls + end)
+
+    def write_rows(tag, pairs):
+        local_primes = sorted({q for _, rows in pairs for _, factors, _ in rows for q, _ in factors})
+        write_factor_table(local_primes, tag, prime_shards, prefix, header, write, True,
+                           external=external_primes)
+        local = "primes" + tag
+        private_imports = [prefix + ".Factor" + tag]
+        if root_masks:
+            private_imports.append(f"{prefix}.Masks{pairs[0][0][0]}")
+        lines = header(["ExpSix.FastMITM" if root_masks else "ExpSix.P7"], private_imports)
+        for (p, r), rows in pairs:
+            key = f"{p}_{r}"
+            literals = []
+            for (sp, sr, y, v), factors, witnesses in rows:
+                if root_masks:
+                    sides = [[], []]
+                    counts = [1, 1]
+                    for q, e in sorted(factors, key=lambda qe: (-qe[1], qe[0])):
+                        side = 0 if counts[0] <= counts[1] else 1
+                        sides[side].append((q, e))
+                        counts[side] *= e + 1
+                    left, right = sorted(zip(counts, sides), key=lambda item: item[0])
+                    literals.append(f"⟨⟨{sp},{sr},{y},{v}⟩,{lean_pairs(sorted(left[1]))},{lean_pairs(sorted(right[1]))}⟩")
+                    continue
+                chunks = []
+                for i in range(0, len(witnesses), 64):
+                    name = f"roots{key}_{y}_{v}_{i // 64}"
+                    triple = (f"⟨{a},{ell},{s}⟩" for a, ell, s in witnesses[i:i+64])
+                    lines.append(f"private noncomputable def {name} : List ExpSix.PairSieve.RootWitness := " + lit(triple))
+                    chunks.append(name)
+                roots = "[]" if not chunks else chunks[0] if len(chunks) == 1 else lit(chunks) + ".flatten"
+                literals.append(f"⟨⟨{sp},{sr},{y},{v}⟩,{lean_pairs(factors)},{roots}⟩")
+            if root_masks:
+                row_type = "ExpSix.FastMITM.MaskedRow"
+                check = f"ExpSix.FastMITM.chunkOK {local} {p} localMasks{p}"
+                pair_block = f"ExpSix.FastMITM.pairBlockOfMaskedSoundRows {local} {local}_sound {p} {r} localMasks{p} localMasksValid{p}"
+            else:
+                row_type = "ExpSix.P7.ShapeRow"
+                check = f"ExpSix.P7.chunkOKWith {local}"
+                pair_block = f"ExpSix.P7.pairBlockOfSoundRows {local} {local}_sound {p} {r}"
+            lines += [
+                f"private noncomputable def rows{key} : List {row_type} := " + lit(literals),
+                f"private theorem ok{key} : {check} rows{key} = true := by decide +kernel",
+                f"theorem verified{key} : ∀ s ∈ ExpSix.ShapeGenerator.pairSlice {p} {r}, {common} s :=",
+                f"  ({pair_block} rows{key}",
+                f"    (by decide) ok{key}).verified", ""]
+        name = "Rows" + tag
+        write(name, lines + end)
+        return name
+
+    def full_name(module):
+        return module if "." in module else prefix + "." + module
+
+    def pair_fact(p, r):
+        return (tight_prefix + "." if (p, r) in external_pairs else "") + f"verified{p}_{r}"
+
+    def write_first(which, p, entries):
+        modules = list(dict.fromkeys(module for _, module in entries))
+        nm = f"{which}P{p}"
+        lines = header(["ExpSix.P7"], [full_name(mod) for mod in modules])
+        blocks = lit(f"⟨{r}, {pair_fact(p, r)}⟩" for r, _ in entries)
+        lines += [f"theorem {nm}Verified : ∀ s ∈ ExpSix.ShapeGenerator.pSlice .{which} {p}, {common} s :=",
+                  f"  (ExpSix.ShapeGenerator.primeBlockOfPairs (w := .{which}) (Q := {common})",
+                  f"    {p} {blocks} (by decide)).verified"]
+        write(nm, lines + end)
+
+    # Each raw file and pair stays together. Only the exported small coverage
+    # theorems are referenced by the next stage, never all raw rows at once.
+    windows = ["tight", "broad"] if window == "broad" and not reuse_tight else [window]
+    first_keys = {which: [] for which in windows}
+    partial_pairs = []
+    total_shards = 0
+    for p, first in groupby(groups(), key=lambda item: item[0][0]):
+        entries, batch, size = [], [], 0
+        masks_written = False
+        def flush():
+            nonlocal total_shards
+            name = write_rows(f"{total_shards:04d}", batch)
+            entries.extend((pair[1], name) for pair, _ in batch)
+            total_shards += 1
+        for pair, rows in first:
+            if pair in external_pairs:
+                if batch:
+                    flush()
+                    batch, size = [], 0
+                entries.append((pair[1], external_pairs[pair]))
+                continue
+            if root_masks and not masks_written:
+                write_masks(p)
+                masks_written = True
+            if batch and size + len(rows) > rows_per_shard:
+                flush()
+                batch, size = [], 0
+            batch.append((pair, rows))
+            size += len(rows)
+        if batch:
+            flush()
+        if limit_pairs is not None:
+            partial_pairs.extend((p, r, mod) for r, mod in entries)
+        else:
+            for which in windows:
+                wb, _ = WINDOWS[which]
+                selected = [(r, mod) for r, mod in entries if r < wb[3]]
+                if p <= wb[2] and selected:
+                    write_first(which, p, selected)
+                    first_keys[which].append(p)
+
+    if limit_pairs is not None:
+        deps = list(dict.fromkeys(full_name(mod) for _, _, mod in partial_pairs))
+        ls = header(["ExpSix.P7"], deps)
+        for p, r, _ in partial_pairs:
+            ls += [f"theorem pilot{p}_{r}Verified : ∀ s ∈ ExpSix.ShapeGenerator.pairSlice {p} {r}, {common} s :=",
+                   f"  {pair_fact(p, r)}", ""]
+    else:
+        deps = [f"{prefix}.{which}P{p}" for which in windows for p in first_keys[which]]
+        ls = header(["ExpSix.P7"], deps)
+        for which in windows:
+            wb, _ = WINDOWS[which]
+            blocks = lit(f"⟨{p}, {which}P{p}Verified⟩" for p in first_keys[which])
+            ls += [f"theorem {which}Covered (s : ExpSix.ShapeGenerator.Shape)",
+                   f"    (hs : ExpSix.ShapeGenerator.Valid .{which} s) : {common} s :=",
+                   f"  ExpSix.ShapeGenerator.forall_valid_of_primeBlocks {blocks} (by decide) hs", "",
+                   f"theorem {which}FieldDataExcluded {{D : Int}} {{p r : Nat}}",
+                   "    (hD : D < 0) (hL : ExpSix.Lgap ≤ D.natAbs) (hp : p.Prime) (hr : r.Prime)",
+                   f"    (hlo : 2069 ≤ p) (hpmax : p ≤ {wb[2]}) (hpr : p < r) (hrmax : r ≤ {wb[3]-1})",
+                   "    (F : ExpSix.FieldData D p) (G : ExpSix.PairBridge.NormWitness D r) : False :=",
+                   ("  ExpSix.P7.fieldData_excluded_of_shapeCover" if root_masks else
+                    "  ExpSix.P7.fieldData_excluded_of_cover (fun _ h => of_decide_eq_true h)"),
+                   f"    {which}Covered hD hL hp hr hlo hpmax hpr hrmax F G", ""]
+    write("Manifest", ls + end)
+    print(f"emitted {shape_count} shapes in {total_shards} row shards, "
+          f"{pair_count} prime pairs and {len(ordered)} required Pratt nodes")
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     commands = ap.add_subparsers(dest="command", required=True)
@@ -445,6 +724,22 @@ def main():
     sp.add_argument("--module-prefix", default="ExpSix.Generated")
     sp.add_argument("--limit", type=int)
     sp.add_argument("--prove-chunks", action="store_true")
+    sp = commands.add_parser("emit-production", help="emit resumable proof shards and coverage modules")
+    sp.add_argument("--data", required=True, type=Path)
+    sp.add_argument("--lean-root", required=True, type=Path)
+    sp.add_argument("--module-prefix", default="ExpSix.Generated")
+    sp.add_argument("--rows-per-shard", type=int, default=256)
+    sp.add_argument("--pratt-per-shard", type=int, default=256)
+    sp.add_argument("--window", choices=WINDOWS, required=True)
+    sp.add_argument("--limit-pairs", type=int, help="emit a partial compiler smoke test of N complete pairs")
+    sp.add_argument("--start-pair", type=int, nargs=2, metavar=("P", "R"),
+                    help="start a limited smoke test at this pair")
+    sp.add_argument("--pratt-only", action="store_true",
+                    help="emit just the Pratt shards, ready to compile before row generation")
+    sp.add_argument("--root-masks", action="store_true",
+                    help="use certified quadratic-residue masks in place of individual root literals")
+    sp.add_argument("--reuse-tight", nargs=2, metavar=("DIRECTORY", "MODULE_PREFIX"),
+                    help="in the broad window, import existing tight pair proofs and Pratt facts")
     args = ap.parse_args()
     if args.command == "build":
         build(args.window, args.out)
@@ -453,6 +748,10 @@ def main():
         print(f"{args.window}: verified {nr} shapes, {nw} square witnesses, {np} Pratt nodes")
     elif args.command == "test-pilot":
         pilot_regression(args.data)
+    elif args.command == "emit-production":
+        emit_production(args.data, args.lean_root, args.rows_per_shard, args.pratt_per_shard,
+                        args.module_prefix, args.window, args.limit_pairs, args.start_pair, args.pratt_only,
+                        args.root_masks, args.reuse_tight)
     else:
         emit(args.data, args.lean_root, args.part_size, args.prove_chunks, args.limit, args.module_prefix, args.window)
 

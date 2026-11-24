@@ -210,6 +210,64 @@ theorem run_sound {t : Table} {rows : List PrattNode} {out : Table}
 
 end PrattTable
 
+namespace PrattNode
+
+/-- An explicit product of the factor-primality propositions lets a generated
+proof share each previously checked prime theorem by name. -/
+def FactorsPrime : List (Nat × Nat) → Prop
+  | [] => True
+  | (q, _) :: fs => q.Prime ∧ FactorsPrime fs
+
+private theorem prime_of_mem_factors {fs : List (Nat × Nat)} (h : FactorsPrime fs)
+    {f : Nat × Nat} (hf : f ∈ fs) : Nat.Prime f.1 := by
+  induction fs with
+  | nil => cases hf
+  | cons g gs ih =>
+    rcases List.mem_cons.mp hf with rfl | htail
+    · exact h.1
+    · exact ih h.2 htail
+
+theorem checkedPrime (p a : Nat) (fs : List (Nat × Nat))
+    (previous : FactorsPrime fs) (checked : (PrattNode.mk p a fs).check = true) :
+    p.Prime :=
+  (PrattNode.mk p a fs).sound checked (fun _ hf => prime_of_mem_factors previous hf)
+
+end PrattNode
+
+/-- A generated balanced search tree. A split routes queries to its two
+children. Even incorrectly placed split keys can never admit a composite. -/
+inductive PrimeTree where
+  | empty
+  | leaf (p : Nat)
+  | fork (pivot : Nat) (left right : PrimeTree)
+
+namespace PrimeTree
+
+def has : PrimeTree → Nat → Bool
+  | .empty, _ => false
+  | .leaf p, q => q == p
+  | .fork pivot left right, q => if q < pivot then left.has q else right.has q
+
+def Sound : PrimeTree → Prop
+  | .empty => True
+  | .leaf p => Nat.Prime p
+  | .fork _ left right => left.Sound ∧ right.Sound
+
+theorem prime_of_has (t : PrimeTree) (h : t.Sound) (q : Nat)
+    (accepted : t.has q = true) : q.Prime := by
+  induction t with
+  | empty => cases accepted
+  | leaf p =>
+    have he : q = p := eq_of_beq accepted
+    exact he ▸ h
+  | fork pivot left right ihL ihR =>
+    simp only [has] at accepted
+    split at accepted
+    · exact ihL h.1 accepted
+    · exact ihR h.2 accepted
+
+end PrimeTree
+
 /- The base node and a 31-bit NTT prime exercise the same public interface
 as the generator. Only the small factor primes are discharged directly. -/
 private def twoNode : PrattNode := ⟨2, 1, []⟩
